@@ -21,6 +21,9 @@ const resetSettingsBtn = document.getElementById('reset-settings');
 const copyDeepLinkBtn = document.getElementById('copy-deep-link');
 const toastNotification = document.getElementById('toast-notification');
 const toastMessage = document.getElementById('toast-message');
+const versionFooter = document.getElementById('version-footer');
+
+const APP_VERSION = 'v2025.12.08.1547';
 
 const themeCategories = {
     Seasonal: ['fall', 'winter', 'spring', 'summer'],
@@ -907,6 +910,11 @@ async function bootstrap() {
     generateThemeList();
     generateBackgroundList();
     setupCollapsibles();
+    
+    if (versionFooter) {
+        versionFooter.textContent = `Version ${APP_VERSION}`;
+    }
+
     const applied = await applyDeepLinkFromUrl();
     if (!applied) {
         init();

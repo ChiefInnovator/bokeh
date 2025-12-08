@@ -386,3 +386,14 @@ input[type=range]::-moz-range-thumb {
     opacity: 0;
     transform: translate(-50%, 20px);
 }
+
+.version-footer {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.3);
+    font-family: monospace;
+    letter-spacing: 0.5px;
+}
