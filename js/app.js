@@ -23,7 +23,7 @@ const toastNotification = document.getElementById('toast-notification');
 const toastMessage = document.getElementById('toast-message');
 const versionFooter = document.getElementById('version-footer');
 
-const APP_VERSION = 'v2025.12.08.1548';
+const APP_VERSION = 'v2025.12.08.1759';
 
 const themeCategories = {
     Seasonal: ['fall', 'winter', 'spring', 'summer'],
@@ -578,6 +578,7 @@ function renderThemeCategory(title, keys) {
         if (key === 'fall') displayName = 'Fall Harvest';
         if (key === 'spring') displayName = 'Spring Bloom';
         if (key === 'summer') displayName = 'Summer Sky';
+        if (key === 'winter') displayName = 'Winter Frost';
         if (key === 'nordic') displayName = 'Norway';
         
         btn.textContent = displayName;

@@ -27,7 +27,7 @@ A beautiful, photorealistic animated bokeh screensaver that runs directly in you
 
 ## Themes (by category)
 
-- **Seasonal**: Fall Harvest, Winter, Spring Bloom, Summer Sky
+- **Seasonal**: Fall Harvest, Winter Frost, Spring Bloom, Summer Sky
 - **Holiday**: Christmas, Hanukkah, Halloween, Valentine, Easter, Fourth of July
 - **Nature**: Ocean, Forest, Desert, Sunrise, Sunset
 - **Countries/Flags**: American, Brazil, China, England, France, Russian, Norway
