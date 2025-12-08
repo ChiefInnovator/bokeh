@@ -8,7 +8,7 @@ let particles = [];
 let inactivityTimer;
 
 // Configuration
-const PARTICLE_COUNT = 200; // Increased for denser bokeh
+const PARTICLE_COUNT = 300; // Increased for denser bokeh
 
 // Color Palettes (H, S, L objects for dynamic alpha)
 const themes = {
@@ -77,10 +77,34 @@ const themes = {
         { h: 30, s: 100, l: 50 },   // Neon Orange
         { h: 0, s: 0, l: 100 },     // Pure White
         { h: 210, s: 100, l: 40 }   // Darker Blue
+    ],
+    easter: [
+        { h: 330, s: 100, l: 80 },  // Pastel Pink
+        { h: 190, s: 100, l: 80 },  // Pastel Blue
+        { h: 120, s: 60, l: 80 },   // Pastel Green
+        { h: 60, s: 100, l: 80 },   // Pastel Yellow
+        { h: 260, s: 100, l: 85 }   // Lavender
+    ],
+    july4: [
+        { h: 0, s: 100, l: 50 },    // Red
+        { h: 0, s: 0, l: 100 },     // White
+        { h: 240, s: 100, l: 50 }   // Blue
+    ],
+    desert: [
+        { h: 30, s: 60, l: 60 },    // Sand
+        { h: 15, s: 70, l: 50 },    // Terracotta
+        { h: 45, s: 80, l: 70 },    // Pale Gold
+        { h: 190, s: 50, l: 70 }    // Pale Sky
+    ],
+    sunrise: [
+        { h: 340, s: 80, l: 70 },   // Soft Pink
+        { h: 20, s: 100, l: 70 },   // Peach
+        { h: 50, s: 100, l: 80 },   // Pale Yellow
+        { h: 260, s: 60, l: 70 }    // Morning Lavender
     ]
 };
 
-let currentTheme = 'warm';
+let currentTheme = 'christmas';
 
 class Particle {
     constructor() {
@@ -180,7 +204,7 @@ themeSelector.addEventListener('change', (e) => {
     init();
 });
 
-canvas.addEventListener('click', () => {
+function toggleFullscreen() {
     if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen().catch(err => {
             console.log(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
@@ -189,6 +213,14 @@ canvas.addEventListener('click', () => {
         if (document.exitFullscreen) {
             document.exitFullscreen();
         }
+    }
+}
+
+canvas.addEventListener('click', toggleFullscreen);
+
+window.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+        toggleFullscreen();
     }
 });
 

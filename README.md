@@ -7,17 +7,21 @@ A beautiful, photorealistic animated bokeh screensaver that runs directly in you
 *   **Photorealistic Effect**: Uses HTML5 Canvas and radial gradients to create soft, glowing, out-of-focus light effects.
 *   **Animated Shimmer**: Particles gently pulse and shimmer in place, creating a calming atmosphere.
 *   **Multiple Themes**: Choose from a variety of color palettes to suit your mood:
-    *   Warm City Lights
-    *   Christmas
-    *   Hanukkah
+    *   Christmas (Default)
     *   Cyberpunk
     *   Deep Ocean
-    *   Sunset
+    *   Desert
+    *   Easter
     *   Enchanted Forest
-    *   Valentine's
+    *   Fourth of July
     *   Halloween
+    *   Hanukkah
     *   Nordic
+    *   Sunrise
+    *   Sunset
     *   Tron
+    *   Valentine's
+    *   Warm City Lights
 *   **Fullscreen Mode**: Click anywhere on the screen to toggle fullscreen. The UI automatically hides after 2 seconds of inactivity for an immersive experience.
 *   **Responsive**: Automatically adjusts to fit any screen size.
 
