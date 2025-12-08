@@ -63,7 +63,7 @@ const backgroundImages = [
     { id: 'boston_commons', name: 'Boston Commons', file: 'backgrounds/boston_commons_christmas_lights.jpg' },
     { id: 'boston_gazebo', name: 'Boston Gazebo', file: 'backgrounds/boston_charles_river_gazebo_winter.jpg' },
     { id: 'boston_winter', name: 'Boston Winter', file: 'backgrounds/boston_winter.jpg' },
-    { id: 'boston_state_house_night', name: 'Old State House (Night)', file: 'backgrounds/boston_old_state_house_night.jpg' },
+    { id: 'boston_state_house_night', name: 'Old State House 2', file: 'backgrounds/boston_old_state_house_2.jpg' },
     { id: 'boston_state_house', name: 'Old State House', file: 'backgrounds/boston_old_state_house.jpg' },
     { id: 'groton', name: 'Groton, MA', file: 'backgrounds/groton_massachusetts.jpg' },
     { id: 'cranes_store', name: 'Crane\'s General Store', file: 'backgrounds/norman_rockwell_cranes_general_store.jpg' },
