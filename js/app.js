@@ -7,6 +7,8 @@ const closeBtn = document.getElementById('close-btn');
 const themeList = document.getElementById('theme-list');
 const backgroundList = document.getElementById('background-list');
 const bgLayer = document.getElementById('bg-layer');
+const particleCountInput = document.getElementById('particle-count');
+const particleCountVal = document.getElementById('particle-count-val');
 
 let width, height;
 let particles = [];
@@ -15,15 +17,20 @@ let currentTheme = 'christmas';
 let currentBackground = 'none';
 
 // Configuration
-const PARTICLE_COUNT = 300; // Increased for denser bokeh
+let particleCount = 300; // Increased for denser bokeh
 
 // Background Images
 const backgroundImages = [
     { id: 'none', name: 'No Background', file: '' },
+    { id: 'christmas_forest', name: 'Christmas Forest', file: 'backgrounds/christmas_forest.jpg' },
     { id: 'boston_commons', name: 'Boston Commons', file: 'backgrounds/boston_commons_christmas_lights.jpg' },
     { id: 'boston_gazebo', name: 'Boston Gazebo', file: 'backgrounds/boston_charles_river_gazebo_winter.jpg' },
     { id: 'boston_winter', name: 'Boston Winter', file: 'backgrounds/boston_winter.jpg' },
-    { id: 'boston_state_house', name: 'Old State House', file: 'backgrounds/boston_old_state_house_night.jpg' }
+    { id: 'boston_state_house_night', name: 'Old State House (Night)', file: 'backgrounds/boston_old_state_house_night.jpg' },
+    { id: 'boston_state_house', name: 'Old State House', file: 'backgrounds/boston_old_state_house.jpg' },
+    { id: 'groton', name: 'Groton, MA', file: 'backgrounds/groton_massachusetts.jpg' },
+    { id: 'cranes_store', name: 'Crane\'s General Store', file: 'backgrounds/norman_rockwell_cranes_general_store.jpg' },
+    { id: 'hanukkah_menorahs', name: 'Hanukkah Menorahs', file: 'backgrounds/hanukkah_menorahs_eighth_night.jpg' }
 ];
 
 // Color Palettes (H, S, L objects for dynamic alpha)
@@ -168,6 +175,12 @@ const themes = {
         { h: 20, s: 100, l: 70 },   // Peach
         { h: 50, s: 100, l: 80 },   // Pale Yellow
         { h: 260, s: 60, l: 70 }    // Morning Lavender
+    ],
+    winter: [
+        { h: 195, s: 100, l: 85 },  // Icy Cyan
+        { h: 210, s: 100, l: 75 },  // Frost Blue
+        { h: 230, s: 80, l: 90 },   // Pale Lavender Blue
+        { h: 0, s: 0, l: 100 }      // Snow White
     ]
 };
 
@@ -248,10 +261,17 @@ function resize() {
 
 function init() {
     particles = [];
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
+    for (let i = 0; i < particleCount; i++) {
         particles.push(new Particle());
     }
 }
+
+// Particle Count Slider Logic
+particleCountInput.addEventListener('input', (e) => {
+    particleCount = parseInt(e.target.value);
+    particleCountVal.textContent = particleCount;
+    init();
+});
 
 function animate() {
     requestAnimationFrame(animate);
@@ -416,10 +436,27 @@ window.addEventListener('mousemove', resetInactivityTimer);
 window.addEventListener('mousedown', resetInactivityTimer);
 window.addEventListener('touchstart', resetInactivityTimer);
 
+// Collapsible Sections
+function setupCollapsibles() {
+    const headers = document.querySelectorAll('.collapsible-header');
+    
+    headers.forEach(header => {
+        header.addEventListener('click', () => {
+            // Toggle the collapsed class on the header (for the icon)
+            header.classList.toggle('collapsed');
+            
+            // Toggle the collapsed class on the content (next sibling)
+            const content = header.nextElementSibling;
+            content.classList.toggle('collapsed');
+        });
+    });
+}
+
 // Initial setup
 width = canvas.width = window.innerWidth;
 height = canvas.height = window.innerHeight;
 generateThemeList();
 generateBackgroundList();
+setupCollapsibles();
 init();
 animate();

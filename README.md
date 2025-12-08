@@ -6,6 +6,9 @@ A beautiful, photorealistic animated bokeh screensaver that runs directly in you
 
 *   **Photorealistic Effect**: Uses HTML5 Canvas and radial gradients to create soft, glowing, out-of-focus light effects.
 *   **Animated Shimmer**: Particles gently pulse and shimmer in place, creating a calming atmosphere.
+*   **Background Selection**: Choose from scenic backgrounds (Boston Winter, Old State House, Christmas Forest, Hanukkah Menorahs, etc.) or a classic dark background. Backgrounds feature a cinematic depth-of-field blur and vignette effect.
+*   **Modern UI**: A sleek, glassmorphism-style side panel with collapsible sections for easy customization.
+*   **Customizable Density**: Adjust the number of bokeh particles with a slider to suit your preference and performance needs.
 *   **Multiple Themes**: Choose from a variety of color palettes to suit your mood:
     *   American
     *   Batman
@@ -31,6 +34,7 @@ A beautiful, photorealistic animated bokeh screensaver that runs directly in you
     *   Tron
     *   Valentine's
     *   Warm City Lights
+    *   Winter
     *   Wonder Woman
 *   **Fullscreen Mode**: Click anywhere on the screen or press **Enter** to toggle fullscreen. The UI automatically hides after 2 seconds of inactivity for an immersive experience.
 *   **Responsive**: Automatically adjusts to fit any screen size.

@@ -26,15 +26,34 @@
             
             <div class="panel-content">
                 <div class="panel-section">
-                    <h4>Theme</h4>
-                    <div id="theme-list">
+                    <h4 class="collapsible-header">
+                        Settings
+                        <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </h4>
+                    <div class="section-content">
+                        <div class="control-group">
+                            <label for="particle-count">Particle Count: <span id="particle-count-val">300</span></label>
+                            <input type="range" id="particle-count" min="50" max="1000" value="300" step="10">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h4 class="collapsible-header">
+                        Theme
+                        <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </h4>
+                    <div id="theme-list" class="section-content">
                         <!-- Themes will be injected here by JS -->
                     </div>
                 </div>
 
                 <div class="panel-section">
-                    <h4>Background</h4>
-                    <div id="background-list">
+                    <h4 class="collapsible-header">
+                        Background
+                        <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </h4>
+                    <div id="background-list" class="section-content">
                         <!-- Backgrounds will be injected here by JS -->
                     </div>
                 </div>
