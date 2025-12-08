@@ -39,15 +39,18 @@ let currentBackground = 'none';
 let cachedDeepLink = '';
 let deepLinkUpdateTimer;
 
+// Detect mobile device for performance optimization
+const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+
 // Configuration
-let particleCount = 300; // Increased for denser bokeh
+let particleCount = isMobile ? 100 : 300; // Reduced for mobile, higher for desktop
 let particleSizeScale = 1.0; // Multiplier for particle radius
 let animSpeedScale = 1.0; // Multiplier for shimmer speed
 let brightnessScale = 1.0; // Multiplier for particle brightness
 let driftEnabled = false;
 
 const DEFAULTS = {
-    particleCount: 300,
+    particleCount: isMobile ? 100 : 300,
     particleSizeScale: 1.0,
     animSpeedScale: 1.0,
     brightnessPercent: 100,
