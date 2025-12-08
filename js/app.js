@@ -18,7 +18,8 @@ const brightnessVal = document.getElementById('brightness-val');
 const driftInput = document.getElementById('drift');
 const resetSettingsBtn = document.getElementById('reset-settings');
 const copyDeepLinkBtn = document.getElementById('copy-deep-link');
-const copyStatus = document.getElementById('copy-status');
+const toastNotification = document.getElementById('toast-notification');
+const toastMessage = document.getElementById('toast-message');
 
 const themeCategories = {
     Seasonal: ['fall', 'winter', 'spring', 'summer'],
@@ -465,9 +466,20 @@ function fallbackCopy(text) {
 }
 
 function showCopyStatus(success) {
-    if (copyStatus) {
-        copyStatus.textContent = success ? 'Link copied' : 'Copy failed';
-        setTimeout(() => { copyStatus.textContent = ''; }, 2000);
+    if (toastNotification && toastMessage) {
+        toastMessage.textContent = success ? 'Link copied to clipboard' : 'Failed to copy link';
+        toastNotification.classList.remove('hidden');
+        
+        // Clear any existing timer to prevent early hiding if clicked rapidly
+        if (toastNotification.dataset.timer) {
+            clearTimeout(parseInt(toastNotification.dataset.timer));
+        }
+        
+        const timer = setTimeout(() => {
+            toastNotification.classList.add('hidden');
+        }, 3000);
+        
+        toastNotification.dataset.timer = timer;
     }
 }
 
