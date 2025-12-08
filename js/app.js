@@ -400,12 +400,32 @@ if (resetSettingsBtn) {
     });
 }
 
+function encodeStateParamSync(state) {
+    const json = JSON.stringify(state);
+    const data = new TextEncoder().encode(json);
+    return toBase64Url(data);
+}
+
 // Copy Deep Link
 if (copyDeepLinkBtn) {
     copyDeepLinkBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         
-        const linkStr = cachedDeepLink || window.location.href;
+        let linkStr = cachedDeepLink;
+        
+        // If cached link is missing, generate it synchronously (uncompressed)
+        if (!linkStr) {
+            try {
+                const state = buildStatePayload();
+                const encoded = encodeStateParamSync(state);
+                const url = new URL(window.location.href);
+                url.searchParams.set('s', encoded);
+                linkStr = url.toString();
+            } catch (err) {
+                console.error('Failed to generate sync deep link', err);
+                linkStr = window.location.href;
+            }
+        }
         
         // Try async clipboard first, fallback to legacy execCommand
         if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -854,6 +874,8 @@ async function bootstrap() {
     if (!applied) {
         init();
     }
+    // Force initial deep link generation
+    updateDeepLink();
     animate();
 }
 
