@@ -673,18 +673,25 @@ async function compressString(str) {
 }
 
 async function decompressToString(uint8arr) {
-    if (typeof DecompressionStream === 'undefined') {
-        return new TextDecoder().decode(uint8arr);
-    }
-    try {
-        const ds = new DecompressionStream('gzip');
-        const writer = ds.writable.getWriter();
-        await writer.write(uint8arr);
-        await writer.close();
-        const decompressed = await new Response(ds.readable).arrayBuffer();
-        return new TextDecoder().decode(decompressed);
-    } catch (err) {
-        // Fallback if data was not compressed
+    // Check for GZIP magic bytes (0x1F 0x8B)
+    if (uint8arr.length > 2 && uint8arr[0] === 0x1f && uint8arr[1] === 0x8b) {
+        if (typeof DecompressionStream === 'undefined') {
+            console.warn('DecompressionStream not supported, cannot decompress state.');
+            return '{}';
+        }
+        try {
+            const ds = new DecompressionStream('gzip');
+            const writer = ds.writable.getWriter();
+            await writer.write(uint8arr);
+            await writer.close();
+            const decompressed = await new Response(ds.readable).arrayBuffer();
+            return new TextDecoder().decode(decompressed);
+        } catch (err) {
+            console.error('Decompression failed', err);
+            return '{}';
+        }
+    } else {
+        // Not gzip, assume plain text
         return new TextDecoder().decode(uint8arr);
     }
 }
@@ -765,10 +772,9 @@ async function applyDeepLinkFromUrl() {
     try {
         const state = await decodeStateParam(encoded);
         applyStatePayload(state);
-        // Hide panel and attempt fullscreen for an immersive start
+        // Hide panel for an immersive start
         themePanel.classList.add('panel-hidden');
         setTimeout(() => uiLayer.classList.add('hidden'), 2200);
-        toggleFullscreen();
         return true;
     } catch (err) {
         console.log('Failed to apply deep link', err);
