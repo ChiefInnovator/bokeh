@@ -32,7 +32,7 @@ A beautiful, photorealistic animated bokeh screensaver that runs directly in you
     *   Valentine's
     *   Warm City Lights
     *   Wonder Woman
-*   **Fullscreen Mode**: Click anywhere on the screen to toggle fullscreen. The UI automatically hides after 2 seconds of inactivity for an immersive experience.
+*   **Fullscreen Mode**: Click anywhere on the screen or press **Enter** to toggle fullscreen. The UI automatically hides after 2 seconds of inactivity for an immersive experience.
 *   **Responsive**: Automatically adjusts to fit any screen size.
 
 ## Usage
