@@ -783,7 +783,10 @@ async function applyDeepLinkFromUrl() {
         applyStatePayload(state);
         // Hide panel for an immersive start
         themePanel.classList.add('panel-hidden');
-        setTimeout(() => uiLayer.classList.add('hidden'), 2200);
+        setTimeout(() => {
+            uiLayer.classList.add('hidden');
+            document.body.style.cursor = 'none';
+        }, 2200);
         return true;
     } catch (err) {
         console.log('Failed to apply deep link', err);
@@ -839,12 +842,14 @@ window.addEventListener('keydown', (e) => {
 function resetInactivityTimer() {
     clearTimeout(inactivityTimer);
     uiLayer.classList.remove('hidden');
+    document.body.style.cursor = 'default';
     
     if (document.fullscreenElement) {
         inactivityTimer = setTimeout(() => {
             // Only hide if menu is closed
             if (themePanel.classList.contains('panel-hidden')) {
                 uiLayer.classList.add('hidden');
+                document.body.style.cursor = 'none';
             }
         }, 2000); // Hide after 2 seconds of inactivity
     }
@@ -856,6 +861,7 @@ document.addEventListener('fullscreenchange', () => {
     } else {
         clearTimeout(inactivityTimer);
         uiLayer.classList.remove('hidden');
+        document.body.style.cursor = 'default';
     }
 });
 
