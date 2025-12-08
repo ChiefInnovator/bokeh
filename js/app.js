@@ -18,6 +18,38 @@ const themes = {
         { h: 50, s: 100, l: 60 },   // Yellow-Gold
         { h: 40, s: 60, l: 90 }     // Warm White
     ],
+    wonderwoman: [
+        { h: 350, s: 100, l: 45 },  // Red
+        { h: 220, s: 100, l: 40 },  // Blue
+        { h: 45, s: 100, l: 50 },   // Gold
+        { h: 0, s: 0, l: 100 }      // White
+    ],
+    american: [
+        { h: 350, s: 100, l: 40 },  // Dark Red
+        { h: 0, s: 0, l: 100 },     // White
+        { h: 240, s: 100, l: 30 }   // Navy Blue
+    ],
+    batman: [
+        { h: 0, s: 0, l: 20 },      // Dark Grey
+        { h: 50, s: 100, l: 50 },   // Signal Yellow
+        { h: 240, s: 30, l: 30 }    // Midnight Blue
+    ],
+    brazil: [
+        { h: 120, s: 100, l: 35 },  // Green
+        { h: 50, s: 100, l: 50 },   // Yellow
+        { h: 230, s: 100, l: 40 },  // Blue
+        { h: 0, s: 0, l: 100 }      // White
+    ],
+    cheetah: [
+        { h: 45, s: 100, l: 50 },   // Gold
+        { h: 30, s: 80, l: 40 },    // Tan/Orange
+        { h: 20, s: 80, l: 20 },    // Dark Brown
+        { h: 0, s: 0, l: 10 }       // Black
+    ],
+    china: [
+        { h: 355, s: 100, l: 45 },  // Red
+        { h: 45, s: 100, l: 50 }    // Yellow/Gold
+    ],
     christmas: [
         { h: 0, s: 100, l: 50 },    // Pure Red
         { h: 120, s: 100, l: 40 },  // Pure Green
@@ -48,6 +80,11 @@ const themes = {
         { h: 30, s: 100, l: 50 },   // Orange
         { h: 45, s: 100, l: 60 }    // Gold
     ],
+    superman: [
+        { h: 220, s: 100, l: 50 },  // Blue
+        { h: 350, s: 100, l: 50 },  // Red
+        { h: 50, s: 100, l: 50 }    // Yellow
+    ],
     forest: [
         { h: 150, s: 100, l: 30 },  // Emerald
         { h: 90, s: 100, l: 50 },   // Lime
@@ -72,6 +109,11 @@ const themes = {
         { h: 0, s: 0, l: 95 },      // Snow White
         { h: 30, s: 30, l: 80 }     // Pale Wood
     ],
+    russian: [
+        { h: 0, s: 0, l: 100 },     // White
+        { h: 220, s: 100, l: 40 },  // Medium Blue
+        { h: 355, s: 100, l: 45 }   // Red
+    ],
     tron: [
         { h: 190, s: 100, l: 50 },  // Neon Cyan
         { h: 30, s: 100, l: 50 },   // Neon Orange
@@ -85,10 +127,19 @@ const themes = {
         { h: 60, s: 100, l: 80 },   // Pastel Yellow
         { h: 260, s: 100, l: 85 }   // Lavender
     ],
+    england: [
+        { h: 355, s: 100, l: 45 },  // Red
+        { h: 0, s: 0, l: 100 }      // White
+    ],
     july4: [
         { h: 0, s: 100, l: 50 },    // Red
         { h: 0, s: 0, l: 100 },     // White
         { h: 240, s: 100, l: 50 }   // Blue
+    ],
+    france: [
+        { h: 230, s: 90, l: 35 },   // Cobalt Blue
+        { h: 0, s: 0, l: 100 },     // White
+        { h: 350, s: 90, l: 50 }    // Red
     ],
     desert: [
         { h: 30, s: 60, l: 60 },    // Sand
