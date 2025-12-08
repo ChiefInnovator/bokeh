@@ -17,12 +17,25 @@ const brightnessInput = document.getElementById('brightness');
 const brightnessVal = document.getElementById('brightness-val');
 const driftInput = document.getElementById('drift');
 const resetSettingsBtn = document.getElementById('reset-settings');
+const copyDeepLinkBtn = document.getElementById('copy-deep-link');
+const copyStatus = document.getElementById('copy-status');
+
+const themeCategories = {
+    Seasonal: ['fall', 'winter', 'spring', 'summer'],
+    Holiday: ['christmas', 'hanukkah', 'halloween', 'valentine', 'easter', 'july4'],
+    Nature: ['ocean', 'forest', 'desert', 'sunrise', 'sunset'],
+    'Countries/Flags': ['american', 'brazil', 'china', 'england', 'france', 'russian', 'nordic'],
+    Comics: ['superman', 'cheetah', 'wonderwoman', 'batman'],
+    'Mood/Futuristic': ['cyberpunk', 'tron', 'warm']
+};
 
 let width, height;
 let particles = [];
 let inactivityTimer;
 let currentTheme = 'christmas';
 let currentBackground = 'none';
+let cachedDeepLink = '';
+let deepLinkUpdateTimer;
 
 // Configuration
 let particleCount = 300; // Increased for denser bokeh
@@ -309,6 +322,18 @@ class Particle {
     }
 }
 
+async function updateDeepLink() {
+    try {
+        const state = buildStatePayload();
+        const encoded = await encodeStateParam(state);
+        const url = new URL(window.location.href);
+        url.searchParams.set('s', encoded);
+        cachedDeepLink = url.toString();
+    } catch (err) {
+        console.error('Failed to update deep link', err);
+    }
+}
+
 function resize() {
     width = canvas.width = window.innerWidth;
     height = canvas.height = window.innerHeight;
@@ -321,6 +346,10 @@ function init() {
     for (let i = 0; i < particleCount; i++) {
         particles.push(new Particle());
     }
+    
+    // Debounce deep link update
+    clearTimeout(deepLinkUpdateTimer);
+    deepLinkUpdateTimer = setTimeout(updateDeepLink, 500);
 }
 
 // Particle Count Slider Logic
@@ -369,6 +398,48 @@ if (resetSettingsBtn) {
         e.stopPropagation();
         resetSettings();
     });
+}
+
+// Copy Deep Link
+if (copyDeepLinkBtn) {
+    copyDeepLinkBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        
+        const linkStr = cachedDeepLink || window.location.href;
+        
+        // Try async clipboard first, fallback to legacy execCommand
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(linkStr)
+                .then(() => showCopyStatus(true))
+                .catch(() => fallbackCopy(linkStr));
+        } else {
+            fallbackCopy(linkStr);
+        }
+    });
+}
+
+function fallbackCopy(text) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    let success = false;
+    try {
+        success = document.execCommand('copy');
+    } catch (err) {
+        success = false;
+    }
+    document.body.removeChild(ta);
+    showCopyStatus(success);
+}
+
+function showCopyStatus(success) {
+    if (copyStatus) {
+        copyStatus.textContent = success ? 'Link copied' : 'Copy failed';
+        setTimeout(() => { copyStatus.textContent = ''; }, 2000);
+    }
 }
 
 function animate() {
@@ -432,16 +503,26 @@ closeBtn.addEventListener('click', (e) => {
 });
 
 // Generate Theme List
-function generateThemeList() {
-    const sortedKeys = Object.keys(themes).sort();
-    
-    sortedKeys.forEach(key => {
+function renderThemeCategory(title, keys) {
+    if (!keys.length) return;
+
+    const category = document.createElement('div');
+    category.className = 'theme-category';
+
+    const heading = document.createElement('div');
+    heading.className = 'theme-category-title';
+    heading.textContent = title;
+    category.appendChild(heading);
+
+    keys.forEach(key => {
+        if (!themes[key]) return;
+
         const btn = document.createElement('button');
         btn.className = 'theme-btn';
+        btn.dataset.key = key;
         if (key === currentTheme) btn.classList.add('active');
         
         // Format name: "warm" -> "Warm", "wonderwoman" -> "Wonderwoman"
-        // Better formatting for specific keys could be added
         let displayName = key.charAt(0).toUpperCase() + key.slice(1);
         if (key === 'warm') displayName = 'Warm City Lights';
         if (key === 'july4') displayName = 'Fourth of July';
@@ -449,6 +530,7 @@ function generateThemeList() {
         if (key === 'fall') displayName = 'Fall Harvest';
         if (key === 'spring') displayName = 'Spring Bloom';
         if (key === 'summer') displayName = 'Summer Sky';
+        if (key === 'nordic') displayName = 'Norway';
         
         btn.textContent = displayName;
         
@@ -463,8 +545,37 @@ function generateThemeList() {
             btn.classList.add('active');
         });
         
-        themeList.appendChild(btn);
+        category.appendChild(btn);
     });
+
+    themeList.appendChild(category);
+}
+
+function generateThemeList() {
+    themeList.innerHTML = '';
+
+    const categorized = new Set();
+    Object.values(themeCategories).forEach(arr => arr.forEach(key => categorized.add(key)));
+
+    // Render defined categories in order
+    Object.entries(themeCategories).forEach(([title, keys]) => {
+        renderThemeCategory(title, keys);
+    });
+
+    // Render any remaining themes under Other
+    const remaining = Object.keys(themes)
+        .sort()
+        .filter(key => !categorized.has(key));
+    if (remaining.length) {
+        renderThemeCategory('Other', remaining);
+    }
+}
+
+function setThemeById(themeId) {
+    if (!themes[themeId]) return;
+    currentTheme = themeId;
+    init();
+    markActiveTheme(themeId);
 }
 
 // Generate Background List
@@ -472,6 +583,7 @@ function generateBackgroundList() {
     backgroundImages.forEach(bg => {
         const btn = document.createElement('button');
         btn.className = 'theme-btn'; // Reuse theme button styling
+        btn.dataset.id = bg.id;
         if (bg.id === currentBackground) btn.classList.add('active');
         
         btn.textContent = bg.name;
@@ -510,6 +622,162 @@ function toggleFullscreen() {
             document.exitFullscreen();
         }
     }
+}
+
+function toBase64Url(uint8arr) {
+    let binary = '';
+    uint8arr.forEach(byte => { binary += String.fromCharCode(byte); });
+    const b64 = btoa(binary);
+    return b64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+function fromBase64Url(str) {
+    let b64 = str.replace(/-/g, '+').replace(/_/g, '/');
+    while (b64.length % 4) b64 += '=';
+    const binary = atob(b64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i);
+    }
+    return bytes;
+}
+
+async function compressString(str) {
+    if (typeof CompressionStream === 'undefined') return null;
+    const cs = new CompressionStream('gzip');
+    const writer = cs.writable.getWriter();
+    await writer.write(new TextEncoder().encode(str));
+    await writer.close();
+    const compressed = await new Response(cs.readable).arrayBuffer();
+    return new Uint8Array(compressed);
+}
+
+async function decompressToString(uint8arr) {
+    if (typeof DecompressionStream === 'undefined') {
+        return new TextDecoder().decode(uint8arr);
+    }
+    try {
+        const ds = new DecompressionStream('gzip');
+        const writer = ds.writable.getWriter();
+        await writer.write(uint8arr);
+        await writer.close();
+        const decompressed = await new Response(ds.readable).arrayBuffer();
+        return new TextDecoder().decode(decompressed);
+    } catch (err) {
+        // Fallback if data was not compressed
+        return new TextDecoder().decode(uint8arr);
+    }
+}
+
+async function encodeStateParam(state) {
+    const json = JSON.stringify(state);
+    const compressed = await compressString(json);
+    const data = compressed || new TextEncoder().encode(json);
+    return toBase64Url(data);
+}
+
+async function decodeStateParam(param) {
+    const bytes = fromBase64Url(param);
+    const text = await decompressToString(bytes);
+    return JSON.parse(text);
+}
+
+function buildStatePayload() {
+    return {
+        theme: currentTheme,
+        background: currentBackground,
+        particleCount,
+        particleSizeScale,
+        animSpeedScale,
+        brightnessPercent: Math.round(brightnessScale * 100),
+        driftEnabled
+    };
+}
+
+function applyStatePayload(state) {
+    if (!state || typeof state !== 'object') return;
+
+    if (typeof state.particleCount === 'number') {
+        particleCount = state.particleCount;
+        particleCountInput.value = particleCount;
+        particleCountVal.textContent = particleCount;
+    }
+
+    if (typeof state.particleSizeScale === 'number') {
+        particleSizeScale = state.particleSizeScale;
+        if (particleSizeInput) particleSizeInput.value = particleSizeScale;
+        if (particleSizeVal) particleSizeVal.textContent = particleSizeScale.toFixed(1);
+    }
+
+    if (typeof state.animSpeedScale === 'number') {
+        animSpeedScale = state.animSpeedScale;
+        if (animSpeedInput) animSpeedInput.value = animSpeedScale;
+        if (animSpeedVal) animSpeedVal.textContent = animSpeedScale.toFixed(1);
+    }
+
+    if (typeof state.brightnessPercent === 'number') {
+        brightnessScale = state.brightnessPercent / 100;
+        if (brightnessInput) brightnessInput.value = state.brightnessPercent;
+        if (brightnessVal) brightnessVal.textContent = Math.round(brightnessScale * 100);
+    }
+
+    if (typeof state.driftEnabled === 'boolean') {
+        driftEnabled = state.driftEnabled;
+        if (driftInput) driftInput.checked = driftEnabled;
+    }
+
+    if (state.theme && themes[state.theme]) {
+        currentTheme = state.theme;
+        markActiveTheme(currentTheme);
+    }
+
+    if (state.background) {
+        setBackgroundById(state.background);
+    }
+
+    init();
+}
+
+async function applyDeepLinkFromUrl() {
+    const url = new URL(window.location.href);
+    const encoded = url.searchParams.get('s');
+    if (!encoded) return false;
+    try {
+        const state = await decodeStateParam(encoded);
+        applyStatePayload(state);
+        // Hide panel and attempt fullscreen for an immersive start
+        themePanel.classList.add('panel-hidden');
+        setTimeout(() => uiLayer.classList.add('hidden'), 2200);
+        toggleFullscreen();
+        return true;
+    } catch (err) {
+        console.log('Failed to apply deep link', err);
+        return false;
+    }
+}
+
+function setBackgroundById(bgId) {
+    currentBackground = bgId;
+    const bg = backgroundImages.find(b => b.id === bgId);
+    if (bg) {
+        if (bg.id === 'none') {
+            bgLayer.style.backgroundImage = 'none';
+        } else {
+            bgLayer.style.backgroundImage = `url('${bg.file}')`;
+        }
+    }
+
+    const allBgBtns = backgroundList.querySelectorAll('.theme-btn');
+    allBgBtns.forEach(b => b.classList.remove('active'));
+    const activeBtn = Array.from(allBgBtns).find(btn => btn.dataset.id === bgId);
+    if (activeBtn) activeBtn.classList.add('active');
+}
+
+function markActiveTheme(themeId) {
+    const allThemeBtns = themeList.querySelectorAll('.theme-btn');
+    allThemeBtns.forEach(b => b.classList.remove('active'));
+    const activeBtn = Array.from(allThemeBtns).find(btn => btn.dataset.key === themeId);
+    if (activeBtn) activeBtn.classList.add('active');
 }
 
 canvas.addEventListener('click', (e) => {
@@ -576,11 +844,17 @@ function setupCollapsibles() {
     });
 }
 
-// Initial setup
-width = canvas.width = window.innerWidth;
-height = canvas.height = window.innerHeight;
-generateThemeList();
-generateBackgroundList();
-setupCollapsibles();
-init();
-animate();
+async function bootstrap() {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+    generateThemeList();
+    generateBackgroundList();
+    setupCollapsibles();
+    const applied = await applyDeepLinkFromUrl();
+    if (!applied) {
+        init();
+    }
+    animate();
+}
+
+bootstrap();

@@ -13,6 +13,25 @@ A beautiful, photorealistic animated bokeh screensaver that runs directly in you
 *   **Fullscreen Mode**: Click anywhere on the screen or press **Enter** to toggle fullscreen. The UI automatically hides after 2 seconds of inactivity for an immersive experience.
 *   **Responsive**: Automatically adjusts to fit any screen size.
 
+## Controls
+
+- Particle Count: 50–1000
+- Particle Size: 0.5x–2.0x
+- Shimmer Speed: 0.1x–3.0x
+- Brightness: 20%–200%
+- Drift: toggle on/off gentle movement
+- Reset: one click to restore defaults
+
+## Themes (by category)
+
+- Seasonal: Fall Harvest, Winter, Spring Bloom, Summer Sky
+- Holiday: Christmas, Hanukkah, Halloween, Valentine, Easter, Fourth of July
+- Nature: Ocean, Forest, Desert, Sunrise, Sunset
+- Countries/Flags: American, Brazil, China, England, France, Russian, Norway
+- Comics: Superman, Cheetah, Wonder Woman, Batman
+- Mood/Futuristic: Cyberpunk, Tron, Warm City Lights
+- Other: Classic sets like Sunset/Sunrise overlap with mood/nature; pick what feels right.
+
 ## Usage
 
 1.  Clone the repository or download the files.
