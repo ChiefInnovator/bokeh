@@ -1,0 +1,53 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #050505; /* Very dark background for bokeh effect */
+    overflow: hidden; /* Prevent scrollbars */
+    font-family: sans-serif;
+}
+
+#canvas {
+    display: block;
+    width: 100vw;
+    height: 100vh;
+}
+
+#ui-layer {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 10;
+    transition: opacity 0.5s ease;
+    opacity: 1;
+}
+
+#ui-layer.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#theme-selector {
+    padding: 8px 12px;
+    font-size: 1rem;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    backdrop-filter: blur(5px);
+    cursor: pointer;
+    outline: none;
+    transition: background-color 0.3s;
+}
+
+#theme-selector:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+#theme-selector option {
+    background-color: #000;
+    color: #fff;
+}
