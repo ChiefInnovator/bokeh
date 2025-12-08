@@ -46,3 +46,9 @@ A beautiful, photorealistic animated bokeh screensaver that runs directly in you
 *   HTML5
 *   CSS3
 *   Vanilla JavaScript (No external libraries required)
+
+## Copyright & Attribution
+
+Copyright © 2025 Richard Crane
+
+This project was vibe coded with GitHub Copilot for Visual Studio Code using GPT-5.1-Codex-Max (Preview) and Gemini 3 Pro (Preview).
