@@ -205,6 +205,16 @@ class Particle {
         // Math.sin creates a smooth wave between -1 and 1
         let alpha = this.baseAlpha + Math.sin(this.phase) * this.shimmerRange;
         
+        // Adjust for background visibility
+        let centerLightnessOffset = 40;
+        let midLightnessOffset = 0;
+
+        if (currentBackground !== 'none') {
+            alpha *= 0.7; // Increased from 0.3 to 0.7 for better visibility
+            // centerLightnessOffset = 10; // Kept high for glow
+            // midLightnessOffset = -10; 
+        }
+
         // Clamp alpha to valid range [0, 1]
         if (alpha < 0) alpha = 0;
         if (alpha > 1) alpha = 1;
@@ -214,13 +224,13 @@ class Particle {
         const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius);
         
         // Center: Brighter version of the color (higher lightness)
-        gradient.addColorStop(0, `hsla(${this.color.h}, ${this.color.s}%, ${Math.min(100, this.color.l + 40)}%, ${alpha})`);
+        gradient.addColorStop(0, `hsla(${this.color.h}, ${this.color.s}%, ${Math.min(100, this.color.l + centerLightnessOffset)}%, ${alpha})`);
         
         // Mid: The actual color
-        gradient.addColorStop(0.5, `hsla(${this.color.h}, ${this.color.s}%, ${this.color.l}%, ${alpha * 0.9})`);
+        gradient.addColorStop(0.5, `hsla(${this.color.h}, ${this.color.s}%, ${Math.max(0, this.color.l + midLightnessOffset)}%, ${alpha * 0.9})`);
         
         // Edge: Fade to transparent
-        gradient.addColorStop(1, `hsla(${this.color.h}, ${this.color.s}%, ${this.color.l}%, 0)`);
+        gradient.addColorStop(1, `hsla(${this.color.h}, ${this.color.s}%, ${Math.max(0, this.color.l + midLightnessOffset)}%, 0)`);
 
         ctx.fillStyle = gradient;
         ctx.beginPath();
@@ -250,6 +260,7 @@ function animate() {
     ctx.clearRect(0, 0, width, height);
 
     // 'lighter' (additive blending) is key for the glowing light effect
+    // Always use 'lighter' to ensure visibility against bright backgrounds
     ctx.globalCompositeOperation = 'lighter';
 
     particles.forEach(particle => {
