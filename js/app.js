@@ -9,6 +9,14 @@ const backgroundList = document.getElementById('background-list');
 const bgLayer = document.getElementById('bg-layer');
 const particleCountInput = document.getElementById('particle-count');
 const particleCountVal = document.getElementById('particle-count-val');
+const particleSizeInput = document.getElementById('particle-size');
+const particleSizeVal = document.getElementById('particle-size-val');
+const animSpeedInput = document.getElementById('anim-speed');
+const animSpeedVal = document.getElementById('anim-speed-val');
+const brightnessInput = document.getElementById('brightness');
+const brightnessVal = document.getElementById('brightness-val');
+const driftInput = document.getElementById('drift');
+const resetSettingsBtn = document.getElementById('reset-settings');
 
 let width, height;
 let particles = [];
@@ -18,10 +26,26 @@ let currentBackground = 'none';
 
 // Configuration
 let particleCount = 300; // Increased for denser bokeh
+let particleSizeScale = 1.0; // Multiplier for particle radius
+let animSpeedScale = 1.0; // Multiplier for shimmer speed
+let brightnessScale = 1.0; // Multiplier for particle brightness
+let driftEnabled = false;
+
+const DEFAULTS = {
+    particleCount: 300,
+    particleSizeScale: 1.0,
+    animSpeedScale: 1.0,
+    brightnessPercent: 100,
+    driftEnabled: false
+};
 
 // Background Images
 const backgroundImages = [
     { id: 'none', name: 'No Background', file: '' },
+    { id: 'fall_gradient', name: 'Fall Gradient', file: 'backgrounds/fall.svg' },
+    { id: 'spring_gradient', name: 'Spring Gradient', file: 'backgrounds/spring.svg' },
+    { id: 'summer_gradient', name: 'Summer Gradient', file: 'backgrounds/summer.svg' },
+    { id: 'winter_gradient', name: 'Winter Gradient', file: 'backgrounds/winter.svg' },
     { id: 'christmas_forest', name: 'Christmas Forest', file: 'backgrounds/christmas_forest.jpg' },
     { id: 'boston_commons', name: 'Boston Commons', file: 'backgrounds/boston_commons_christmas_lights.jpg' },
     { id: 'boston_gazebo', name: 'Boston Gazebo', file: 'backgrounds/boston_charles_river_gazebo_winter.jpg' },
@@ -35,6 +59,12 @@ const backgroundImages = [
 
 // Color Palettes (H, S, L objects for dynamic alpha)
 const themes = {
+    fall: [
+        { h: 24, s: 82, l: 48 },   // Rust orange
+        { h: 32, s: 90, l: 58 },   // Amber
+        { h: 18, s: 65, l: 34 },   // Cedar brown
+        { h: 40, s: 25, l: 86 }    // Warm cream
+    ],
     warm: [
         { h: 40, s: 100, l: 50 },   // Amber
         { h: 30, s: 100, l: 50 },   // Orange
@@ -176,11 +206,23 @@ const themes = {
         { h: 50, s: 100, l: 80 },   // Pale Yellow
         { h: 260, s: 60, l: 70 }    // Morning Lavender
     ],
+    spring: [
+        { h: 140, s: 45, l: 72 },   // Mint
+        { h: 295, s: 50, l: 78 },   // Soft lilac
+        { h: 10, s: 55, l: 76 },    // Blush peach
+        { h: 55, s: 90, l: 82 }     // Pale yellow
+    ],
     winter: [
         { h: 195, s: 100, l: 85 },  // Icy Cyan
         { h: 210, s: 100, l: 75 },  // Frost Blue
         { h: 230, s: 80, l: 90 },   // Pale Lavender Blue
         { h: 0, s: 0, l: 100 }      // Snow White
+    ],
+    summer: [
+        { h: 200, s: 90, l: 55 },   // Sky blue
+        { h: 185, s: 95, l: 50 },   // Turquoise
+        { h: 30, s: 95, l: 60 },    // Sunlight yellow
+        { h: 12, s: 80, l: 60 }     // Coral
     ]
 };
 
@@ -195,7 +237,9 @@ class Particle {
         this.y = Math.random() * height;
         
         // Larger radius for soft, photorealistic bokeh
-        this.radius = Math.random() * 50 + 20; 
+        this.radius = (Math.random() * 50 + 20) * particleSizeScale; 
+        this.driftSpeedX = (Math.random() - 0.5) * 0.1; // Gentle horizontal drift
+        this.driftSpeedY = (Math.random() - 0.5) * 0.1; // Gentle vertical drift
         
         // Pick a random color from the current theme
         const theme = themes[currentTheme];
@@ -203,7 +247,7 @@ class Particle {
         
         // Shimmer properties
         this.phase = Math.random() * Math.PI * 2; // Random starting point in sine wave
-        this.speed = 0.01 + Math.random() * 0.02; // Speed of the shimmer
+        this.speed = (0.01 + Math.random() * 0.02) * animSpeedScale; // Speed of the shimmer
         this.baseAlpha = 0.3 + Math.random() * 0.4; // Even brighter base transparency
         this.shimmerRange = 0.15; // Increased shimmer range
     }
@@ -211,12 +255,25 @@ class Particle {
     update() {
         // No x/y movement. Only update the shimmer phase.
         this.phase += this.speed;
+
+        // Gentle drift if enabled
+        if (driftEnabled) {
+            this.x += this.driftSpeedX;
+            this.y += this.driftSpeedY;
+
+            // Wrap around edges for continuous flow
+            if (this.x < 0) this.x += width;
+            if (this.x > width) this.x -= width;
+            if (this.y < 0) this.y += height;
+            if (this.y > height) this.y -= height;
+        }
     }
 
     draw() {
         // Calculate oscillating alpha for shimmer effect
         // Math.sin creates a smooth wave between -1 and 1
         let alpha = this.baseAlpha + Math.sin(this.phase) * this.shimmerRange;
+        alpha *= brightnessScale;
         
         // Adjust for background visibility
         let centerLightnessOffset = 40;
@@ -273,6 +330,47 @@ particleCountInput.addEventListener('input', (e) => {
     init();
 });
 
+// Particle Size Slider Logic
+if (particleSizeInput) {
+    particleSizeInput.addEventListener('input', (e) => {
+        particleSizeScale = parseFloat(e.target.value);
+        particleSizeVal.textContent = particleSizeScale.toFixed(1);
+        init();
+    });
+}
+
+// Animation Speed Slider Logic
+if (animSpeedInput) {
+    animSpeedInput.addEventListener('input', (e) => {
+        animSpeedScale = parseFloat(e.target.value);
+        animSpeedVal.textContent = animSpeedScale.toFixed(1);
+        init();
+    });
+}
+
+// Brightness Slider Logic
+if (brightnessInput) {
+    brightnessInput.addEventListener('input', (e) => {
+        brightnessScale = parseInt(e.target.value, 10) / 100;
+        brightnessVal.textContent = Math.round(brightnessScale * 100);
+    });
+}
+
+// Drift Toggle Logic
+if (driftInput) {
+    driftInput.addEventListener('change', (e) => {
+        driftEnabled = e.target.checked;
+    });
+}
+
+// Reset Settings Button
+if (resetSettingsBtn) {
+    resetSettingsBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        resetSettings();
+    });
+}
+
 function animate() {
     requestAnimationFrame(animate);
 
@@ -290,6 +388,29 @@ function animate() {
 
     // Reset composite operation
     ctx.globalCompositeOperation = 'source-over';
+}
+
+function resetSettings() {
+    particleCount = DEFAULTS.particleCount;
+    particleCountInput.value = DEFAULTS.particleCount;
+    particleCountVal.textContent = DEFAULTS.particleCount;
+
+    particleSizeScale = DEFAULTS.particleSizeScale;
+    if (particleSizeInput) particleSizeInput.value = DEFAULTS.particleSizeScale;
+    if (particleSizeVal) particleSizeVal.textContent = DEFAULTS.particleSizeScale.toFixed(1);
+
+    animSpeedScale = DEFAULTS.animSpeedScale;
+    if (animSpeedInput) animSpeedInput.value = DEFAULTS.animSpeedScale;
+    if (animSpeedVal) animSpeedVal.textContent = DEFAULTS.animSpeedScale.toFixed(1);
+
+    brightnessScale = DEFAULTS.brightnessPercent / 100;
+    if (brightnessInput) brightnessInput.value = DEFAULTS.brightnessPercent;
+    if (brightnessVal) brightnessVal.textContent = DEFAULTS.brightnessPercent;
+
+    driftEnabled = DEFAULTS.driftEnabled;
+    if (driftInput) driftInput.checked = DEFAULTS.driftEnabled;
+
+    init();
 }
 
 // Event Listeners
@@ -325,6 +446,9 @@ function generateThemeList() {
         if (key === 'warm') displayName = 'Warm City Lights';
         if (key === 'july4') displayName = 'Fourth of July';
         if (key === 'wonderwoman') displayName = 'Wonder Woman';
+        if (key === 'fall') displayName = 'Fall Harvest';
+        if (key === 'spring') displayName = 'Spring Bloom';
+        if (key === 'summer') displayName = 'Summer Sky';
         
         btn.textContent = displayName;
         

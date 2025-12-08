@@ -6,36 +6,10 @@ A beautiful, photorealistic animated bokeh screensaver that runs directly in you
 
 *   **Photorealistic Effect**: Uses HTML5 Canvas and radial gradients to create soft, glowing, out-of-focus light effects.
 *   **Animated Shimmer**: Particles gently pulse and shimmer in place, creating a calming atmosphere.
-*   **Background Selection**: Choose from scenic backgrounds (Boston Winter, Old State House, Christmas Forest, Hanukkah Menorahs, etc.) or a classic dark background. Backgrounds feature a cinematic depth-of-field blur and vignette effect.
+*   **Background Selection**: Choose from scenic backgrounds (Boston Winter, Old State House, Christmas Forest, Hanukkah Menorahs, etc.) or seasonal gradients (Fall, Winter, Spring, Summer). Backgrounds feature a cinematic depth-of-field blur and vignette effect.
 *   **Modern UI**: A sleek, glassmorphism-style side panel with collapsible sections for easy customization.
-*   **Customizable Density**: Adjust the number of bokeh particles with a slider to suit your preference and performance needs.
-*   **Multiple Themes**: Choose from a variety of color palettes to suit your mood:
-    *   American
-    *   Batman
-    *   Brazil
-    *   Cheetah
-    *   China
-    *   Christmas (Default)
-    *   Cyberpunk
-    *   Deep Ocean
-    *   Desert
-    *   Easter
-    *   Enchanted Forest
-    *   England
-    *   Fourth of July
-    *   France
-    *   Halloween
-    *   Hanukkah
-    *   Nordic
-    *   Russian
-    *   Sunrise
-    *   Sunset
-    *   Superman
-    *   Tron
-    *   Valentine's
-    *   Warm City Lights
-    *   Winter
-    *   Wonder Woman
+*   **Customizable Bokeh**: Fine-tune the look with sliders for particle count, size, shimmer speed, brightness, and a drift toggle, plus a reset-to-defaults button.
+*   **Multiple Themes**: Choose from a variety of color palettes, including the four seasons (Fall Harvest, Winter, Spring Bloom, Summer Sky) alongside holiday and vibe sets (Christmas, Hanukkah, Halloween, Cyberpunk, Warm City Lights, Valentine, Tron, Desert, Sunrise/Sunset, and more).
 *   **Fullscreen Mode**: Click anywhere on the screen or press **Enter** to toggle fullscreen. The UI automatically hides after 2 seconds of inactivity for an immersive experience.
 *   **Responsive**: Automatically adjusts to fit any screen size.
 

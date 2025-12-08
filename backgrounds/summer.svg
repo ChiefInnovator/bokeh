@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="summerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1b85ff"/>
+      <stop offset="45%" stop-color="#34c3ff"/>
+      <stop offset="75%" stop-color="#7ae8ff"/>
+      <stop offset="100%" stop-color="#fff4c1"/>
+    </linearGradient>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#summerGradient)"/>
+</svg>
