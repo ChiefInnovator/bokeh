@@ -7,36 +7,39 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <div id="bg-layer"></div>
     <canvas id="canvas"></canvas>
     
     <div id="ui-layer">
-        <select id="theme-selector">
-            <option value="christmas" selected>Christmas</option>
-            <option value="american">American</option>
-            <option value="batman">Batman</option>
-            <option value="brazil">Brazil</option>
-            <option value="cheetah">Cheetah</option>
-            <option value="china">China</option>
-            <option value="cyberpunk">Cyberpunk</option>
-            <option value="ocean">Deep Ocean</option>
-            <option value="desert">Desert</option>
-            <option value="easter">Easter</option>
-            <option value="england">England</option>
-            <option value="forest">Enchanted Forest</option>
-            <option value="july4">Fourth of July</option>
-            <option value="france">France</option>
-            <option value="halloween">Halloween</option>
-            <option value="hanukkah">Hanukkah</option>
-            <option value="nordic">Nordic</option>
-            <option value="russian">Russian</option>
-            <option value="sunrise">Sunrise</option>
-            <option value="sunset">Sunset</option>
-            <option value="superman">Superman</option>
-            <option value="tron">Tron</option>
-            <option value="valentine">Valentine's</option>
-            <option value="warm">Warm City Lights</option>
-            <option value="wonderwoman">Wonder Woman</option>
-        </select>
+        <button id="settings-btn" aria-label="Open Theme Settings">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+        </button>
+        
+        <div id="theme-panel" class="panel-hidden">
+            <div class="panel-header">
+                <h3>Settings</h3>
+                <button id="close-btn">&times;</button>
+            </div>
+            
+            <div class="panel-content">
+                <div class="panel-section">
+                    <h4>Theme</h4>
+                    <div id="theme-list">
+                        <!-- Themes will be injected here by JS -->
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h4>Background</h4>
+                    <div id="background-list">
+                        <!-- Backgrounds will be injected here by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="js/app.js"></script>

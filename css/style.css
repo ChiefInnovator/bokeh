@@ -14,40 +14,176 @@ body {
     display: block;
     width: 100vw;
     height: 100vh;
+    position: relative;
+    z-index: 1;
+}
+
+#bg-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    background-color: #050505;
+    background-size: cover;
+    background-position: center;
+    transition: background-image 0.5s ease-in-out;
 }
 
 #ui-layer {
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
     z-index: 10;
+    pointer-events: none; /* Let clicks pass through to canvas */
     transition: opacity 0.5s ease;
     opacity: 1;
 }
 
 #ui-layer.hidden {
     opacity: 0;
-    pointer-events: none;
 }
 
-#theme-selector {
-    padding: 8px 12px;
-    font-size: 1rem;
-    border-radius: 20px;
+/* Settings Button */
+#settings-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    background-color: rgba(0, 0, 0, 0.5);
-    color: #fff;
-    backdrop-filter: blur(5px);
+    color: white;
+    padding: 10px;
+    border-radius: 50%;
     cursor: pointer;
-    outline: none;
-    transition: background-color 0.3s;
+    backdrop-filter: blur(5px);
+    pointer-events: auto; /* Re-enable clicks */
+    transition: background 0.3s, transform 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-#theme-selector:hover {
-    background-color: rgba(0, 0, 0, 0.7);
+#settings-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: rotate(90deg);
 }
 
-#theme-selector option {
-    background-color: #000;
-    color: #fff;
+/* Glassmorphism Side Panel */
+#theme-panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 100%;
+    background: rgba(20, 20, 20, 0.75);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    transform: translateX(0);
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    pointer-events: auto;
+    display: flex;
+    flex-direction: column;
+    box-shadow: -5px 0 25px rgba(0,0,0,0.5);
+}
+
+#theme-panel.panel-hidden {
+    transform: translateX(100%);
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
+}
+
+.panel-header h3 {
+    color: white;
+    font-weight: 300;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-size: 1.1rem;
+}
+
+#close-btn {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 2rem;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.3s;
+}
+
+#close-btn:hover {
+    color: white;
+}
+
+.panel-content {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+/* Custom Scrollbar for panel content */
+.panel-content::-webkit-scrollbar {
+    width: 6px;
+}
+.panel-content::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+}
+.panel-content::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+.panel-section {
+    margin-bottom: 25px;
+}
+
+.panel-section h4 {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+
+/* Theme Buttons */
+.theme-btn {
+    display: block;
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid transparent;
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.8);
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.95rem;
+    text-transform: capitalize;
+}
+
+.theme-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    transform: translateX(5px);
+}
+
+.theme-btn.active {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
 }

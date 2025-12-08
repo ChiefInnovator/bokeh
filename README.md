@@ -39,8 +39,8 @@ A beautiful, photorealistic animated bokeh screensaver that runs directly in you
 
 1.  Clone the repository or download the files.
 2.  Open `index.html` in any modern web browser.
-3.  Use the dropdown menu in the top right to select a theme.
-4.  Click the screen to enter fullscreen mode.
+3.  Click the **settings button** (gear icon) in the top right to open the side panel and select a theme.
+4.  Click the screen (outside the menu) to enter fullscreen mode.
 
 ## Technologies
 

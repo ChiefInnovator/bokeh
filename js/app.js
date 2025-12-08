@@ -1,14 +1,30 @@
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
-const themeSelector = document.getElementById('theme-selector');
 const uiLayer = document.getElementById('ui-layer');
+const settingsBtn = document.getElementById('settings-btn');
+const themePanel = document.getElementById('theme-panel');
+const closeBtn = document.getElementById('close-btn');
+const themeList = document.getElementById('theme-list');
+const backgroundList = document.getElementById('background-list');
+const bgLayer = document.getElementById('bg-layer');
 
 let width, height;
 let particles = [];
 let inactivityTimer;
+let currentTheme = 'christmas';
+let currentBackground = 'none';
 
 // Configuration
 const PARTICLE_COUNT = 300; // Increased for denser bokeh
+
+// Background Images
+const backgroundImages = [
+    { id: 'none', name: 'No Background', file: '' },
+    { id: 'boston_commons', name: 'Boston Commons', file: 'backgrounds/boston_commons_christmas_lights.jpg' },
+    { id: 'boston_gazebo', name: 'Boston Gazebo', file: 'backgrounds/boston_charles_river_gazebo_winter.jpg' },
+    { id: 'boston_winter', name: 'Boston Winter', file: 'backgrounds/boston_winter.jpg' },
+    { id: 'boston_state_house', name: 'Old State House', file: 'backgrounds/boston_old_state_house_night.jpg' }
+];
 
 // Color Palettes (H, S, L objects for dynamic alpha)
 const themes = {
@@ -155,8 +171,6 @@ const themes = {
     ]
 };
 
-let currentTheme = 'christmas';
-
 class Particle {
     constructor() {
         this.reset();
@@ -250,10 +264,86 @@ function animate() {
 // Event Listeners
 window.addEventListener('resize', resize);
 
-themeSelector.addEventListener('change', (e) => {
-    currentTheme = e.target.value;
-    init();
+// UI Logic
+function toggleMenu() {
+    themePanel.classList.toggle('panel-hidden');
+}
+
+settingsBtn.addEventListener('click', (e) => {
+    e.stopPropagation(); // Prevent canvas click
+    toggleMenu();
 });
+
+closeBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleMenu();
+});
+
+// Generate Theme List
+function generateThemeList() {
+    const sortedKeys = Object.keys(themes).sort();
+    
+    sortedKeys.forEach(key => {
+        const btn = document.createElement('button');
+        btn.className = 'theme-btn';
+        if (key === currentTheme) btn.classList.add('active');
+        
+        // Format name: "warm" -> "Warm", "wonderwoman" -> "Wonderwoman"
+        // Better formatting for specific keys could be added
+        let displayName = key.charAt(0).toUpperCase() + key.slice(1);
+        if (key === 'warm') displayName = 'Warm City Lights';
+        if (key === 'july4') displayName = 'Fourth of July';
+        if (key === 'wonderwoman') displayName = 'Wonder Woman';
+        
+        btn.textContent = displayName;
+        
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            currentTheme = key;
+            init();
+            
+            // Update active state
+            const allThemeBtns = themeList.querySelectorAll('.theme-btn');
+            allThemeBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        });
+        
+        themeList.appendChild(btn);
+    });
+}
+
+// Generate Background List
+function generateBackgroundList() {
+    backgroundImages.forEach(bg => {
+        const btn = document.createElement('button');
+        btn.className = 'theme-btn'; // Reuse theme button styling
+        if (bg.id === currentBackground) btn.classList.add('active');
+        
+        btn.textContent = bg.name;
+        
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            currentBackground = bg.id;
+            
+            // Update Background
+            if (bg.id === 'none') {
+                bgLayer.style.backgroundImage = 'none';
+            } else {
+                bgLayer.style.backgroundImage = `url('${bg.file}')`;
+            }
+            
+            // Update active state
+            // Note: We need to scope this to background buttons only
+            // But since we reused the class, querySelectorAll('.theme-btn') would select all.
+            // We should probably add a specific class or select within container.
+            const allBgBtns = backgroundList.querySelectorAll('.theme-btn');
+            allBgBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        });
+        
+        backgroundList.appendChild(btn);
+    });
+}
 
 function toggleFullscreen() {
     if (!document.fullscreenElement) {
@@ -267,11 +357,23 @@ function toggleFullscreen() {
     }
 }
 
-canvas.addEventListener('click', toggleFullscreen);
+canvas.addEventListener('click', (e) => {
+    // Close menu if open, otherwise toggle fullscreen
+    if (!themePanel.classList.contains('panel-hidden')) {
+        themePanel.classList.add('panel-hidden');
+    } else {
+        toggleFullscreen();
+    }
+});
 
 window.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
         toggleFullscreen();
+    }
+    if (e.key === 'Escape') {
+        if (!themePanel.classList.contains('panel-hidden')) {
+            themePanel.classList.add('panel-hidden');
+        }
     }
 });
 
@@ -282,7 +384,10 @@ function resetInactivityTimer() {
     
     if (document.fullscreenElement) {
         inactivityTimer = setTimeout(() => {
-            uiLayer.classList.add('hidden');
+            // Only hide if menu is closed
+            if (themePanel.classList.contains('panel-hidden')) {
+                uiLayer.classList.add('hidden');
+            }
         }, 2000); // Hide after 2 seconds of inactivity
     }
 }
@@ -303,5 +408,7 @@ window.addEventListener('touchstart', resetInactivityTimer);
 // Initial setup
 width = canvas.width = window.innerWidth;
 height = canvas.height = window.innerHeight;
+generateThemeList();
+generateBackgroundList();
 init();
 animate();
