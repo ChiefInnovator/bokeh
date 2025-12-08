@@ -40,7 +40,7 @@ let cachedDeepLink = '';
 let deepLinkUpdateTimer;
 
 // Detect mobile device for performance optimization
-const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 1024;
 
 // Configuration
 let particleCount = isMobile ? 100 : 300; // Reduced for mobile, higher for desktop
