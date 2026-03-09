@@ -1,4 +1,4 @@
-# **Bokeh Screensaver Web App**  
+# **Bokeh Screensaver Web App**
 *Experience a stunning animated bokeh screensaver directly in your web browser!*
 
 ## ✨ Features
@@ -25,7 +25,7 @@
 6. Click anywhere on the screen to enter fullscreen mode.
 
 ## 🏗️ Architecture
-- **Tech Stack**: 
+- **Tech Stack**:
   - **HTML5** for structure
   - **CSS3** for styling (utilizing glassmorphism)
   - **JavaScript** for functionality (canvas rendering and UI interactions)
@@ -40,6 +40,7 @@ We welcome contributions! Please check our [contributing guidelines](https://git
 
 ## 📄 License
 This project is licensed under the MIT License. See the LICENSE file for more details.
+
 
 ---
 
