@@ -1,8 +1,6 @@
 # **Bokeh Screensaver Web App**  
 *Experience a stunning animated bokeh screensaver directly in your web browser!*
 
-![GitHub followers](https://img.shields.io/github/followers/ChiefInnovator?style=social) ![GitHub stars](https://img.shields.io/github/stars/ChiefInnovator/bokeh?style=social) ![GitHub forks](https://img.shields.io/github/forks/ChiefInnovator/bokeh?style=social)  
-
 ## ✨ Features
 - **Photorealistic Effect**: Immerse yourself in soft, glowing, out-of-focus light effects created using HTML5 Canvas.
 - **Animated Shimmer**: Enjoy calming, gently pulsing particles that enhance your ambiance.
