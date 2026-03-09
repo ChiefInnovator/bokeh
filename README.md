@@ -35,4 +35,8 @@ This project is licensed under the MIT License. See the LICENSE file for more de
 
 ---
 
+Built by [Company](https://mill5.com)
+
+---
+
 <sub>Powered by [RepoBeacon](https://repobeacon.com)</sub>
