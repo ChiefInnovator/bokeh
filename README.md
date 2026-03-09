@@ -4,24 +4,23 @@
 ![GitHub followers](https://img.shields.io/github/followers/ChiefInnovator?style=social) ![GitHub stars](https://img.shields.io/github/stars/ChiefInnovator/bokeh?style=social) ![GitHub forks](https://img.shields.io/github/forks/ChiefInnovator/bokeh?style=social)  
 
 ## ✨ Features
-- **Photorealistic Effect**: Enjoy soft, glowing, out-of-focus light effects using HTML5 Canvas and radial gradients.
-- **Animated Shimmer**: Experience calming, gently pulsing particles that create a serene ambiance.
-- **Diverse Background Selection**: Choose from beautiful scenic backgrounds, seasonal gradients, or solid colors, all featuring cinematic depth-of-field blur.
-- **Modern User Interface**: Navigate effortlessly with a sleek, glassmorphism-style side panel for customization.
-- **Customizable Bokeh**: Adjust particle count, size, shimmer speed, brightness, and toggle drift with user-friendly sliders.
-- **Deep Linking**: Share your unique configuration effortlessly with a single click.
-- **Multiple Themes**: Select from various color palettes inspired by the seasons and holidays.
-- **Fullscreen Mode**: Immerse yourself in the experience by entering fullscreen with just a click or keypress.
-- **Responsive & Mobile Optimized**: Automatically adjusts to fit any screen size, ensuring smooth performance on all devices.
-- **Version Tracking**: Keep track of the current build version in the settings panel.
+- **Photorealistic Effect**: Immerse yourself in soft, glowing, out-of-focus light effects created using HTML5 Canvas.
+- **Animated Shimmer**: Enjoy calming, gently pulsing particles that enhance your ambiance.
+- **Diverse Background Selection**: Choose from stunning scenic backgrounds, seasonal gradients, or solid colors, all with cinematic depth-of-field blur.
+- **Modern User Interface**: Easily navigate with a sleek, glassmorphism-style side panel for customization.
+- **Customizable Bokeh**: Fine-tune particle count, size, shimmer speed, brightness, and drift using intuitive sliders.
+- **Deep Linking**: Share your personalized configuration with a single click.
+- **Multiple Themes**: Pick from various color palettes inspired by the seasons and holidays.
+- **Fullscreen Mode**: Dive deeper into the experience with one-click fullscreen.
+- **Responsive & Mobile Optimized**: Automatically adapts to fit any screen size, ensuring smooth performance on all devices.
+- **Version Tracking**: Easily keep track of the current build version in the settings panel.
 
 ## 🚀 Quick Start
-1. **Try it Live**: [Bokeh Screensaver Web App](https://mill5.com)
-2. **Visit GitHub Pages**: [GitHub Pages](https://chiefinnovator.github.io/bokeh/)
-3. Open `index.html` in any modern web browser.
-4. Click the **settings button** (gear icon) in the top right to customize your experience.
-5. Use the **link icon** to copy a shareable URL of your current design.
-6. Click anywhere on the screen to enter fullscreen mode.
+1. **Try it Live**: [Bokeh Screensaver Web App](https://chiefinnovator.github.io/bokeh/)
+2. Open `index.html` in any modern web browser.
+3. Click the **settings button** (gear icon) in the top right to customize your experience.
+4. Use the **link icon** to copy a shareable URL of your current design.
+5. Click anywhere on the screen to enter fullscreen mode.
 
 ## 🎨 Themes (by category)
 - **Seasonal**: Fall Harvest, Winter Frost, Spring Bloom, Summer Sky
