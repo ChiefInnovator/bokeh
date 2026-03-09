@@ -13,29 +13,33 @@
 - **Responsive & Mobile Optimized**: Automatically adapts to fit any screen size, ensuring smooth performance on all devices.
 - **Version Tracking**: Easily keep track of the current build version in the settings panel.
 
-## 🚀 Quick Start
+## 🚀 Getting Started
 1. **Try it Live**: [Bokeh Screensaver Web App](https://chiefinnovator.github.io/bokeh/)
-2. Open `index.html` in any modern web browser.
-3. Click the **settings button** (gear icon) in the top right to customize your experience.
-4. Use the **link icon** to copy a shareable URL of your current design.
-5. Click anywhere on the screen to enter fullscreen mode.
+2. Clone the repository:
+   ```bash
+   git clone https://github.com/ChiefInnovator/bokeh.git
+   ```
+3. Open `index.html` in any modern web browser.
+4. Click the **settings button** (gear icon) in the top right to customize your experience.
+5. Use the **link icon** to copy a shareable URL of your current design.
+6. Click anywhere on the screen to enter fullscreen mode.
 
-## 🎨 Themes (by category)
-- **Seasonal**: Fall Harvest, Winter Frost, Spring Bloom, Summer Sky
-- **Holiday**: Christmas, Hanukkah, Halloween, Valentine, Easter
-- **Nature**: Ocean, Forest, Desert, Sunrise, Sunset
-- **Countries/Flags**: American, Brazil, China, England, France
-- **Mood/Futuristic**: Cyberpunk, Tron, Warm City Lights
+## 🏗️ Architecture
+- **Tech Stack**: 
+  - **HTML5** for structure
+  - **CSS3** for styling (utilizing glassmorphism)
+  - **JavaScript** for functionality (canvas rendering and UI interactions)
+
+- **Key Design Decisions**:
+  - The application employs the HTML5 Canvas API for rendering photorealistic bokeh effects, enhancing the visual experience.
+  - Responsive design ensures compatibility across various devices and screen sizes.
+  - A modular approach to themes and backgrounds allows easy extension and customization.
 
 ## 🤝 Contributing
-We welcome contributions! Please check our guidelines for contributing to the Bokeh project.
+We welcome contributions! Please check our [contributing guidelines](https://github.com/ChiefInnovator/bokeh/blob/main/CONTRIBUTING.md) for more details on how to get involved.
 
 ## 📄 License
 This project is licensed under the MIT License. See the LICENSE file for more details.
-
----
-
-Built by [Company](https://mill5.com)
 
 ---
 
