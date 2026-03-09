@@ -59,3 +59,8 @@ This project uses a **Git Pre-Commit Hook** to automatically update the version 
 Copyright © 2025 Richard Crane
 
 This project was vibe coded with GitHub Copilot for Visual Studio Code using GPT-5.1-Codex-Max (Preview) and Gemini 3 Pro (Preview).
+
+
+---
+
+<sub>Powered by [RepoBeacon](https://repobeacon.com)</sub>
