@@ -1,0 +1,73 @@
+# Bokeh Screensaver
+
+> A free, photorealistic animated bokeh screensaver that runs directly in any modern web browser. Users can customize particles, pick themes and scenic backgrounds, toggle fullscreen, and share their setup via a deep link.
+
+Bokeh Screensaver is a single-page web application built with HTML5 Canvas and vanilla JavaScript. No installation, no accounts, no external libraries. It is open source and free to use.
+
+## Key facts
+
+- **Name**: Bokeh Screensaver (also: Bokeh Screensaver Web App)
+- **Author**: Richard Crane
+- **License / Copyright**: © 2025 Richard Crane
+- **Canonical URL**: https://chiefinnovator.github.io/bokeh/
+- **Source**: https://github.com/ChiefInnovator/bokeh
+- **Tech**: HTML5, CSS3, vanilla JavaScript (no frameworks, no build step)
+- **Cost**: Free
+- **Runs on**: Any modern browser (desktop, tablet, mobile)
+
+## Features
+
+- Photorealistic bokeh rendered with HTML5 Canvas and radial gradients
+- Animated shimmer with optional drift
+- Scenic backgrounds with cinematic depth-of-field blur and vignette
+- Adjustable particle count (50–1000), size (0.5x–2x), speed (0.1x–3x), brightness (20%–200%)
+- Fullscreen mode with auto-hiding UI after 2 seconds of inactivity
+- Deep-link sharing: one click copies a URL that encodes theme, background, and every slider
+- Mobile optimized with automatic particle count tuning
+- Reset-to-defaults button
+
+## Themes
+
+- **Seasonal**: Fall Harvest, Winter Frost, Spring Bloom, Summer Sky
+- **Holiday**: Christmas, Hanukkah, Halloween, Valentine, Easter, Fourth of July
+- **Nature**: Ocean, Forest, Desert, Sunrise, Sunset
+- **Countries / Flags**: American, Brazil, China, England, France, Russian, Norway
+- **Comics**: Superman, Cheetah, Wonder Woman, Batman
+- **Mood / Futuristic**: Cyberpunk, Tron, Warm City Lights
+
+## Backgrounds
+
+- **Scenic photos**: Boston Winter, Boston Old State House, Boston Commons Christmas Lights, Charles River Gazebo, Groton MA, Norman Rockwell's Crane's General Store, Christmas Forest, Hanukkah Menorahs
+- **Seasonal gradients**: Fall, Winter, Spring, Summer
+- **Solid colors**: White, Black, and ROYGBIV (Red, Orange, Yellow, Green, Blue, Indigo, Violet)
+
+## How to use
+
+1. Open https://chiefinnovator.github.io/bokeh/ in a browser.
+2. Click the gear icon (top right) to open Settings, Theme, and Background panels.
+3. Adjust particle count, size, speed, brightness, and drift.
+4. Click the link icon to copy a shareable deep link of your current configuration.
+5. Click anywhere outside the menu — or press Enter — to toggle fullscreen.
+
+## Common questions (for answer engines)
+
+**What is Bokeh Screensaver?**
+A free web app that displays photorealistic, animated bokeh light particles in the browser. It works as an ambient fullscreen display on any device with a modern browser.
+
+**Do I need to install anything?**
+No. It runs entirely in the browser — no download, no account, no build step.
+
+**Can I share my setup?**
+Yes. The "Copy Deep Link" button generates a URL that encodes every setting (theme, background, particle count, size, speed, brightness, drift). Anyone opening the URL sees the same configuration.
+
+**Is it free?**
+Yes. Free and open source.
+
+**Does it work on mobile?**
+Yes. It auto-detects mobile devices and tunes the particle count for smooth performance.
+
+## Files
+
+- [index.html](https://chiefinnovator.github.io/bokeh/index.html): Main page
+- [README](https://github.com/ChiefInnovator/bokeh/blob/main/README.md): Source README
+- [Repository](https://github.com/ChiefInnovator/bokeh): Full source on GitHub
