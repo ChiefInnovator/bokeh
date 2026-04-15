@@ -23,7 +23,7 @@ const toastNotification = document.getElementById('toast-notification');
 const toastMessage = document.getElementById('toast-message');
 const versionFooter = document.getElementById('version-footer');
 
-const APP_VERSION = 'v2026.04.15.1607';
+const APP_VERSION = 'v2026.04.15.1617';
 
 const themeCategories = {
     Seasonal: ['fall', 'winter', 'spring', 'summer'],
