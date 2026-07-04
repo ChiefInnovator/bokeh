@@ -41,7 +41,16 @@ We welcome contributions! Please check our [contributing guidelines](https://git
 ## 📄 License
 This project is licensed under the MIT License. See the LICENSE file for more details.
 
+---
+
+Created by [Richard Crane](https://mill5.com)
+For more information, check out [MILL5](https://www.mill5.com) or listen to the [Inventing Fire with AI](https://inventingfirewith.ai) podcast.
 
 ---
 
-<sub>Powered by [RepoBeacon](https://repobeacon.com)</sub>
+*Powered by Bokeh Screensaver*
+
+
+---
+
+<sub>Powered by [RepoSpotlight](https://repospotlight.ai)</sub>
