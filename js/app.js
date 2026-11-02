@@ -26,7 +26,7 @@ const panelCopyLinkBtn = document.getElementById('panel-copy-link');
 const themeCurrent = document.getElementById('theme-current');
 const backgroundCurrent = document.getElementById('background-current');
 
-const APP_VERSION = 'v2026.11.02.0738';
+const APP_VERSION = 'v2026.11.02.0744';
 
 const themeCategories = {
     Seasonal: ['fall', 'winter', 'spring', 'summer'],
@@ -361,16 +361,14 @@ function resize() {
     width = canvas.width = window.innerWidth;
     height = canvas.height = window.innerHeight;
 
-    // Regenerate only when there was no previous size or the area grew a lot;
-    // otherwise keep the scene (e.g. mobile address bar showing/hiding)
-    if (!oldWidth || !oldHeight || width * height > oldWidth * oldHeight * 1.25) {
+    // Regenerate only when there was no previous size, the area grew a lot, or
+    // the orientation flipped; otherwise keep every position unchanged so the
+    // mobile address bar showing/hiding never moves the scene (off-canvas
+    // particles are clipped until the canvas grows back)
+    const orientationFlipped = oldWidth && oldHeight && (width > height) !== (oldWidth > oldHeight);
+    if (!oldWidth || !oldHeight || orientationFlipped || width * height > oldWidth * oldHeight * 1.25) {
         init();
-        return;
     }
-    particles.forEach(p => {
-        if (p.x > width) p.x = Math.random() * width;
-        if (p.y > height) p.y = Math.random() * height;
-    });
 }
 
 function init() {
@@ -780,9 +778,12 @@ function setRangeFromState(input, value) {
     if (!input || typeof value !== 'number' || !Number.isFinite(value)) return null;
     // Snap explicitly; programmatic assignment isn't guaranteed to round to step
     const min = Number(input.min);
+    const max = Number(input.max);
     const step = Number(input.step);
-    const snapped = step > 0 ? min + Math.round((value - min) / step) * step : value;
-    input.value = Number(snapped.toFixed(6));
+    // Clamp first so huge finite values can't overflow the step arithmetic
+    const clamped = Math.min(max, Math.max(min, value));
+    const snapped = step > 0 ? min + Math.round((clamped - min) / step) * step : clamped;
+    input.value = Number(Math.min(max, snapped).toFixed(6));
     return input.valueAsNumber;
 }
 

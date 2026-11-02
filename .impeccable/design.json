@@ -202,7 +202,7 @@
       }
     ],
     "dos": [
-      "Do keep every UI surface achromatic (The No-Hue Rule) so all 33 themes read cleanly. Content previews (palette dots, thumbnails) are the one exception.",
+      "Do keep every UI surface achromatic (The No-Hue Rule) so all 29 themes read cleanly. Content previews (palette dots, thumbnails) are the one exception.",
       "Do build new floating surfaces as glass: dark translucent fill plus backdrop blur (The Blur-Is-Depth Rule).",
       "Do show state with white opacity steps: rest 0.05, hover 0.15, active 0.2 with a 0.4 rim.",
       "Do keep chrome at the screen edges; the center of the canvas belongs to the light field.",

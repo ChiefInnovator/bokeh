@@ -81,8 +81,8 @@ a scene reset on every window resize.
     speed, drift is off, and UI transitions are near-instant. The setting is
     applied live without re-randomizing the scene.
 *   **G5 (P4):** Resizing keeps every particle's position, color, and phase,
-    unless the canvas area grows by more than 25%, in which case the scene is
-    regenerated to fill the new space.
+    unless the canvas area grows by more than 25% or the orientation flips, in
+    which case the scene is regenerated to fill the new space.
 *   **G6:** Every link whose values are inside the slider ranges and whose IDs
     exist opens with the same settings as before this change, including
     gzip-compressed links.
@@ -150,7 +150,8 @@ None. Decisions taken during review:
 *   **Given**: A phone with drift off.
 *   **When**: The address bar hides and shows, or the phone rotates.
 *   **Then**: Address-bar changes do not move or recolor particles. A rotation
-    that grows the canvas area by more than 25% regenerates the scene once.
+    (orientation flip) or a resize that grows the canvas area by more than 25%
+    regenerates the scene once.
 
 ## Technical Plan (Architecture)
 
@@ -254,9 +255,10 @@ URL. No cache means no stale window and no race with compression.
 ### Change 4: Keep the scene on resize (G5)
 
 `resize()` saves the old width and height, then sets the new canvas size. If
-the old size was 0, or the new area is more than 1.25 times the old area, it
-calls `init()`. Otherwise each particle keeps its position. Particles now
-outside the canvas move to a random position inside it. Setting the canvas
+the old size was 0, the orientation flipped (landscape to portrait or back), or
+the new area is more than 1.25 times the old area, it calls `init()`. Otherwise
+every particle keeps its position unchanged; particles now outside the canvas
+are clipped until the canvas grows back. Setting the canvas
 size clears it, but the next animation frame redraws everything, so the user
 does not see a blank frame.
 
@@ -305,7 +307,7 @@ does not see a blank frame.
 | `inert` unsupported (Safari < 15.5, Firefox < 112) | Hidden panel stays tabbable on old browsers, the same as today | None needed: no worse than current behavior | Manual check in current Chrome and Safari |
 | Clamping changes how out-of-range old links render | A hand-edited link with count 2000 now shows 1000 | G6 limits the promise to in-range links; the UI could never create out-of-range values | CUJ 2 |
 | Plain-JSON links are longer than gzip links | Links grow from about 150 to about 260 characters | Acceptable for sharing; reader still accepts gzip | CUJ 1 |
-| Rotation regenerates the scene | One visible reshuffle on large orientation changes | Only when area grows by more than 25% | CUJ 4 |
+| Rotation regenerates the scene | One visible reshuffle per rotation | Only on an orientation flip or when area grows by more than 25% | CUJ 4 |
 | `F` key conflicts with typing | None today: the panel has no text fields | Shortcut ignored when focus is in an input | CUJ 3 |
 
 ## Non-Functional Requirements
