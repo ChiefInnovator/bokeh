@@ -163,7 +163,7 @@ index.html
  └─ #ui-layer      pointer-events: none wrapper, fades in fullscreen when idle
      ├─ #copy-deep-link, #settings-btn
      ├─ #toast-notification
-     └─ #theme-panel  (Settings / Theme / Background collapsible sections)
+     └─ #theme-panel  (Lights / Theme / Background collapsible sections)
 
 js/app.js  (global script, no modules)
  ├─ Static data:   themeCategories, themes (HSL palettes), backgroundImages
@@ -171,10 +171,11 @@ js/app.js  (global script, no modules)
  │                   particleSizeScale, animSpeedScale, brightnessScale,
  │                   driftEnabled
  ├─ Particle       reset() / update() / draw()
- ├─ init()         rebuild particles, schedule deep-link cache update
+ ├─ init()         rebuild particles
  ├─ animate()      requestAnimationFrame loop: clear, update and draw
- ├─ Deep link      buildStatePayload → JSON → gzip → base64url → ?s=
- │                 applyDeepLinkFromUrl ← decode ← gunzip ← base64url
+ ├─ Deep link      on click: buildStatePayload → JSON → base64url → ?s=
+ │                 applyDeepLinkFromUrl ← JSON ← optional gunzip (old
+ │                 links, output capped) ← base64url (≤ 2,048 chars)
  └─ UI wiring      sliders, theme and background buttons, collapsibles,
                    fullscreen, inactivity auto-hide (2 s, fullscreen only)
 ```

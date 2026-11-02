@@ -191,7 +191,7 @@ Quiet until touched; selection is shown by more light, not color.
 
 ### Side Panel (signature component)
 
-Full-height right drawer of Smoked Glass with 15px blur, hairline left border, and the panel cast shadow. It slides in from the right over 0.4s on the springy curve. Three collapsible sections (Settings, Theme, Background) with uppercase headers and a chevron that rotates -90° when collapsed; a keyboard hint ("Click the scene or press F for fullscreen. ← → change theme.") and the version footer sit under a hairline at the bottom.
+Full-height right drawer of Smoked Glass with 15px blur, hairline left border, and the panel cast shadow. It slides in from the right over 0.4s on the springy curve. Three collapsible sections (Lights, Theme, Background) with uppercase headers and a chevron that rotates -90° when collapsed; a keyboard hint ("Click the scene or press F for fullscreen. ← → change theme.") and the version footer sit under a hairline at the bottom.
 
 ### Toast
 
@@ -201,7 +201,7 @@ Pill of Toast Glass with 10px blur and hairline border, centered near the bottom
 
 ### Do:
 
-- **Do** keep every UI surface achromatic (The No-Hue Rule) so all 33 themes read cleanly. Content previews (palette dots, thumbnails) are the one exception.
+- **Do** keep every UI surface achromatic (The No-Hue Rule) so all 29 themes read cleanly. Content previews (palette dots, thumbnails) are the one exception.
 - **Do** build new floating surfaces as glass: dark translucent fill plus backdrop blur (The Blur-Is-Depth Rule).
 - **Do** show state with white opacity steps: rest 0.05, hover 0.15, active 0.2 with a 0.4 rim.
 - **Do** keep chrome at the screen edges; the center of the canvas belongs to the light field.

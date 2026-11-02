@@ -26,7 +26,7 @@ const panelCopyLinkBtn = document.getElementById('panel-copy-link');
 const themeCurrent = document.getElementById('theme-current');
 const backgroundCurrent = document.getElementById('background-current');
 
-const APP_VERSION = 'v2026.11.02.0730';
+const APP_VERSION = 'v2026.11.02.0738';
 
 const themeCategories = {
     Seasonal: ['fall', 'winter', 'spring', 'summer'],
@@ -45,6 +45,7 @@ let currentBackground = 'none';
 let reducedMotion = false;
 
 const MAX_STATE_PARAM_LENGTH = 2048;
+const MAX_DECOMPRESSED_STATE_BYTES = 8192;
 const INTERACTIVE_SELECTOR = 'button, input, select, textarea, a[href], [contenteditable]';
 
 // Detect mobile device for performance optimization
@@ -731,7 +732,21 @@ async function decompressToString(uint8arr) {
         try {
             // Pipe instead of awaiting writer.write(), which waits on the unread readable side
             const stream = new Blob([uint8arr]).stream().pipeThrough(new DecompressionStream('gzip'));
-            return await new Response(stream).text();
+            // Bound the decompressed size so a small link can't expand into a gzip bomb
+            const reader = stream.getReader();
+            const chunks = [];
+            let total = 0;
+            for (;;) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                total += value.length;
+                if (total > MAX_DECOMPRESSED_STATE_BYTES) {
+                    await reader.cancel();
+                    return '{}';
+                }
+                chunks.push(value);
+            }
+            return await new Blob(chunks).text();
         } catch (err) {
             console.error('Decompression failed', err);
             return '{}';
@@ -763,7 +778,11 @@ function buildStatePayload() {
 // Let the range input clamp to min/max and snap to step; null if not a finite number
 function setRangeFromState(input, value) {
     if (!input || typeof value !== 'number' || !Number.isFinite(value)) return null;
-    input.value = value;
+    // Snap explicitly; programmatic assignment isn't guaranteed to round to step
+    const min = Number(input.min);
+    const step = Number(input.step);
+    const snapped = step > 0 ? min + Math.round((value - min) / step) * step : value;
+    input.value = Number(snapped.toFixed(6));
     return input.valueAsNumber;
 }
 
