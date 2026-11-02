@@ -1,0 +1,25 @@
+name: branch-policy
+
+on:
+  pull_request:
+    branches: [main, develop]
+    types: [opened, reopened, synchronize, edited]
+
+jobs:
+  source-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enforce allowed source branch
+        env:
+          BASE: ${{ github.base_ref }}
+          HEAD: ${{ github.head_ref }}
+        run: |
+          if [ "$BASE" = "main" ] && [ "$HEAD" != "develop" ]; then
+            echo "::error::main only accepts pull requests from develop (got '$HEAD')."
+            exit 1
+          fi
+          if [ "$BASE" = "develop" ] && [[ "$HEAD" != feature/* ]]; then
+            echo "::error::develop only accepts pull requests from feature/* branches (got '$HEAD')."
+            exit 1
+          fi
+          echo "OK: $HEAD -> $BASE"
