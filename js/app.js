@@ -26,7 +26,7 @@ const panelCopyLinkBtn = document.getElementById('panel-copy-link');
 const themeCurrent = document.getElementById('theme-current');
 const backgroundCurrent = document.getElementById('background-current');
 
-const APP_VERSION = 'v2026.11.02.0623';
+const APP_VERSION = 'v2026.11.02.0730';
 
 const themeCategories = {
     Seasonal: ['fall', 'winter', 'spring', 'summer'],
