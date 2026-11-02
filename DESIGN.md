@@ -18,27 +18,29 @@ colors:
   fill-active: "rgba(255, 255, 255, 0.2)"
 typography:
   title:
-    fontFamily: "sans-serif"
+    fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
     fontSize: "1.1rem"
     fontWeight: 300
     letterSpacing: "1px"
   label:
-    fontFamily: "sans-serif"
+    fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
     fontSize: "0.8rem"
     letterSpacing: "1px"
   body:
-    fontFamily: "sans-serif"
+    fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
     fontSize: "0.95rem"
   control:
-    fontFamily: "sans-serif"
+    fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
     fontSize: "0.9rem"
   meta:
-    fontFamily: "monospace"
+    fontFamily: "ui-monospace, SF Mono, Menlo, monospace"
     fontSize: "0.75rem"
     letterSpacing: "0.5px"
 rounded:
   hairline: "2px"
+  sm: "4px"
   md: "8px"
+  sheet: "16px"
   pill: "50px"
   circle: "50%"
 spacing:
@@ -70,6 +72,10 @@ components:
     backgroundColor: "{colors.smoked-glass}"
     width: "300px"
     padding: "20px"
+  panel-icon-button:
+    textColor: "{colors.light-secondary}"
+    rounded: "{rounded.circle}"
+    size: "32px"
   toast:
     backgroundColor: "{colors.toast-glass}"
     textColor: "{colors.light-full}"
@@ -109,7 +115,7 @@ A strictly achromatic interface: near-black glass and white light at stepped opa
 - **Full Light** (`light-full`): icons, active and hovered text, slider thumbs.
 - **Primary Light** (`light-primary`): control labels and resting list-button text.
 - **Secondary Light** (`light-secondary`): section headers and close icon at rest.
-- **Faint Light** (`light-faint`): version footer and other metadata.
+- **Faint Light** (`light-faint`): borders on keyboard hints and thumbnails only; never text (fails contrast on the panel).
 - **Hairline** (`hairline`): dividers, panel left edge, toast border.
 - **Rim** (`rim`): icon-button borders, slider tracks.
 - **Active Rim** (`rim-active`): border of the selected theme or background.
@@ -122,15 +128,15 @@ A strictly achromatic interface: near-black glass and white light at stepped opa
 
 ## Typography
 
-**Body Font:** system `sans-serif`
-**Label/Mono Font:** system `monospace` (version footer only)
+**Body Font:** the platform UI face (`system-ui`: SF Pro on Apple, Segoe UI on Windows, Roboto on Android)
+**Label/Mono Font:** `ui-monospace` (version footer only)
 
-**Character:** Unbranded system type, kept light and tracked so it recedes like engraving on a lens barrel.
+**Character:** The device's own interface type, kept light and tracked so it recedes like engraving on a lens barrel. No webfont download; the bokeh is the display voice, not the type.
 
 ### Hierarchy
 
 - **Title** (300, 1.1rem, 1px tracking, uppercase): panel header "Settings".
-- **Label** (0.8rem, 1px tracking, uppercase): collapsible section headers; theme category titles use 0.85rem, 0.02em, 0.7 opacity.
+- **Label** (0.8rem, 1px tracking, uppercase): collapsible section headers ("Lights", "Theme", "Background"); when collapsed they show the current choice in sentence case at 0.8 opacity. Theme category titles use 0.85rem, 0.02em, 0.5 opacity.
 - **Body** (0.95rem, capitalized): theme and background list buttons; toast text.
 - **Control** (0.9rem): slider and checkbox labels with live values.
 - **Meta** (monospace, 0.75rem, 0.5px tracking): version footer.
@@ -141,11 +147,11 @@ A strictly achromatic interface: near-black glass and white light at stepped opa
 
 ## Layout
 
-Full-bleed canvas fills the viewport with no scroll. Chrome is absolutely positioned on a pass-through layer: icon buttons at 20px from the top-right (settings at right 20px, link at right 70px), the side panel docked full-height to the right edge (300px wide, 20px padding), and the toast centered 30px above the bottom. Panel content scrolls internally with the scrollbar hidden. Spacing steps are 8, 10, 15, 20, and 25px; sections are separated by 25px, controls by 10px vertical padding.
+Full-bleed canvas fills the viewport with no scroll. At 480px and below the panel becomes a bottom sheet (full width, 55vh, 16px top corners) so the top of the scene stays visible while adjusting. Chrome is absolutely positioned on a pass-through layer: icon buttons at 20px from the top-right (settings at right 20px, link at right 70px), the side panel docked full-height to the right edge (300px wide, 20px padding), and the toast centered 30px above the bottom. Panel content scrolls internally with a thin 4px scrollbar at 0.2 white, so its length stays visible. Lights starts open; Theme and Background start collapsed. Spacing steps are 8, 10, 15, 20, and 25px; sections are separated by 25px, controls by 10px vertical padding.
 
 ## Elevation & Depth
 
-Depth is optical, not structural: translucency plus backdrop blur, with one soft shadow per floating surface. The background photo itself is blurred 2px, scaled 1.02, and vignetted to sit behind the light field.
+Depth is optical, not structural: translucency plus backdrop blur, with one soft shadow per floating surface. The background photo itself is blurred 4px, scaled 1.04, and vignetted so the scene sits further out of focus than the lights.
 
 ### Shadow Vocabulary
 
@@ -169,8 +175,8 @@ Circles and soft rectangles only, echoing bokeh discs. Floating icon buttons are
 Quiet until touched; selection is shown by more light, not color.
 
 - **Icon button (link, settings):** circle, Lens Cap fill, 1px Rim border, 10px padding, 5px backdrop blur. Hover: fill steps to 0.1 white; the link button scales to 1.05, the settings gear rotates 90°.
-- **List button (themes, backgrounds, reset):** full width, 8px corners, 12px × 15px padding, 0.05 white fill, transparent border. Hover: 0.15 fill, full-white text, nudges 5px right. Active: 0.2 fill, Active Rim border, bold, selection glow.
-- **Close button:** bare "×" at 2rem in Secondary Light; full white on hover.
+- **List button (themes, backgrounds, reset):** full width, 8px corners, 12px × 15px padding, 0.05 white fill, transparent border; label left, preview right. Hover: 0.15 fill, full-white text, no movement. Active: 0.2 fill, Active Rim border, bold, selection glow, `aria-pressed="true"`.
+- **Panel icon button (copy link, close):** 32px circle, no fill, Secondary Light stroke icons at 18px; hover adds 0.1 white fill and full-white icon. Copy link lives in the panel header so sharing never requires closing the panel.
 - **Focus:** a 2px white outline at 2px offset on `:focus-visible` for every button and input (added by the hardening plan).
 
 ### Inputs / Fields
@@ -178,9 +184,14 @@ Quiet until touched; selection is shown by more light, not color.
 - **Range slider:** 4px Rim track, 16px white circular thumb with thumb glow; label above shows the live value.
 - **Checkbox:** native 18px box with white accent color, label left, control right.
 
+### Previews
+
+- **Theme palette dots:** one 12px circle per theme color, overlapping by 3px, ringed in Smoked Glass. The only place hue appears in the chrome, because it describes content, not UI.
+- **Background thumbnail:** 36 × 24px, 4px corners, Rim border; photos use 96px pre-sized thumbnails in `backgrounds/thumbs/`, never the full images.
+
 ### Side Panel (signature component)
 
-Full-height right drawer of Smoked Glass with 15px blur, hairline left border, and the panel cast shadow. It slides in from the right over 0.4s on the springy curve. Three collapsible sections (Settings, Theme, Background) with uppercase headers and a chevron that rotates -90° when collapsed; the version footer sits under a hairline at the bottom.
+Full-height right drawer of Smoked Glass with 15px blur, hairline left border, and the panel cast shadow. It slides in from the right over 0.4s on the springy curve. Three collapsible sections (Settings, Theme, Background) with uppercase headers and a chevron that rotates -90° when collapsed; a keyboard hint ("Click the scene or press F for fullscreen. ← → change theme.") and the version footer sit under a hairline at the bottom.
 
 ### Toast
 
@@ -190,7 +201,7 @@ Pill of Toast Glass with 10px blur and hairline border, centered near the bottom
 
 ### Do:
 
-- **Do** keep every UI surface achromatic (The No-Hue Rule) so all 33 themes read cleanly.
+- **Do** keep every UI surface achromatic (The No-Hue Rule) so all 33 themes read cleanly. Content previews (palette dots, thumbnails) are the one exception.
 - **Do** build new floating surfaces as glass: dark translucent fill plus backdrop blur (The Blur-Is-Depth Rule).
 - **Do** show state with white opacity steps: rest 0.05, hover 0.15, active 0.2 with a 0.4 rim.
 - **Do** keep chrome at the screen edges; the center of the canvas belongs to the light field.
@@ -202,3 +213,5 @@ Pill of Toast Glass with 10px blur and hairline border, centered near the bottom
 - **Don't** place persistent UI over the center of the canvas or add chrome that stays visible in idle fullscreen.
 - **Don't** use hard, opaque panels or heavy drop shadows; they break the out-of-focus optics.
 - **Don't** remove focus outlines without a visible `:focus-visible` replacement.
+- **Don't** offer light backgrounds (white, pale yellow); additive light disappears into them.
+- **Don't** use `text-transform: capitalize` on names; write the proper case in data.

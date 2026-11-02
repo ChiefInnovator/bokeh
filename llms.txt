@@ -39,7 +39,7 @@ Bokeh Screensaver is a single-page web application built with HTML5 Canvas and v
 
 - **Scenic photos**: Boston Winter, Boston Old State House, Boston Commons Christmas Lights, Charles River Gazebo, Groton MA, Norman Rockwell's Crane's General Store, Christmas Forest, Hanukkah Menorahs
 - **Seasonal gradients**: Fall, Winter, Spring, Summer
-- **Solid colors**: White, Black, and ROYGBIV (Red, Orange, Yellow, Green, Blue, Indigo, Violet)
+- **Solid colors**: Black, Red, Orange, Green, Blue, Indigo, Violet
 
 ## How to use
 

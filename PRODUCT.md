@@ -32,7 +32,7 @@ Photographic-looking bokeh (soft radial light, additive blending, shimmer) over 
 ## Capabilities and Constraints
 
 - Controls: particle count (50–1000), size (0.5–2.0x), speed (0.1–3.0x), brightness (20–200%), drift toggle, reset to defaults.
-- 33 themes in six categories (Seasonal, Holiday, Nature, Countries/Flags, Comics, Mood/Futuristic); 23 backgrounds (none, seasonal gradients, solid colors, scenic photos).
+- 33 themes in six categories (Seasonal, Holiday, Nature, Countries/Flags, Comics, Mood/Futuristic); 21 backgrounds (none, seasonal gradients, dark solid colors, scenic photos; White and Yellow were removed because additive light washes out on light backgrounds).
 - Deep link copies the full configuration to the clipboard.
 - Technical constraints: plain HTML, CSS, and vanilla JavaScript; no framework, bundler, or dependencies; one page.
 - `movies/` holds unused MP4s reserved for a future video-background feature; keep it.

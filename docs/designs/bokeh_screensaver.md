@@ -52,7 +52,13 @@ a scene reset on every window resize.
         browser default ring, which is hard to see on the dark glass panel.
     *   The copy-result toast is not announced to screen readers.
     *   The app ignores `prefers-reduced-motion`.
-4.  **Resize resets the scene (P4).** Every `resize` event calls `init()`,
+4.  **Gzip links fail to open (P5, found during implementation).**
+    `decompressToString()` awaits `writer.write()` before reading the
+    `DecompressionStream` output. The write waits on the unread side, so
+    decoding hangs or throws and every gzip link created by the current
+    `main` build opens with defaults. Fix: pipe a `Blob` stream through the
+    decompressor and read it with `Response.text()`.
+5.  **Resize resets the scene (P4).** Every `resize` event calls `init()`,
     which re-randomizes all particles. On phones the address bar showing and
     hiding fires `resize`, so the scene jumps while the user scrolls or
     rotates.
@@ -344,6 +350,8 @@ Phases are ordered so each can be verified on its own. All work lands in one
     themes, and the `backgroundImages` check for backgrounds. It returns
     `true` after `init()`.
 *   `applyDeepLinkFromUrl()` returns the result of `applyStatePayload()`.
+*   `decompressToString()` pipes a `Blob` stream through
+    `DecompressionStream` instead of awaiting `writer.write()` (P5).
 
 **Checkpoint:** CUJ 1 and CUJ 2 pass; a gzip link created by the current
 `main` build opens with identical settings.

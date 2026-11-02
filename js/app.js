@@ -22,8 +22,11 @@ const copyDeepLinkBtn = document.getElementById('copy-deep-link');
 const toastNotification = document.getElementById('toast-notification');
 const toastMessage = document.getElementById('toast-message');
 const versionFooter = document.getElementById('version-footer');
+const panelCopyLinkBtn = document.getElementById('panel-copy-link');
+const themeCurrent = document.getElementById('theme-current');
+const backgroundCurrent = document.getElementById('background-current');
 
-const APP_VERSION = 'v2026.11.02.0614';
+const APP_VERSION = 'v2026.11.02.0623';
 
 const themeCategories = {
     Seasonal: ['fall', 'winter', 'spring', 'summer'],
@@ -69,24 +72,22 @@ const backgroundImages = [
     { id: 'spring_gradient', name: 'Spring Gradient', file: 'backgrounds/spring.svg' },
     { id: 'summer_gradient', name: 'Summer Gradient', file: 'backgrounds/summer.svg' },
     { id: 'winter_gradient', name: 'Winter Gradient', file: 'backgrounds/winter.svg' },
-    { id: 'white', name: 'White', file: 'backgrounds/white.svg' },
     { id: 'black', name: 'Black', file: 'backgrounds/black.svg' },
     { id: 'red', name: 'Red', file: 'backgrounds/red.svg' },
     { id: 'orange', name: 'Orange', file: 'backgrounds/orange.svg' },
-    { id: 'yellow', name: 'Yellow', file: 'backgrounds/yellow.svg' },
     { id: 'green', name: 'Green', file: 'backgrounds/green.svg' },
     { id: 'blue', name: 'Blue', file: 'backgrounds/blue.svg' },
     { id: 'indigo', name: 'Indigo', file: 'backgrounds/indigo.svg' },
     { id: 'violet', name: 'Violet', file: 'backgrounds/violet.svg' },
-    { id: 'christmas_forest', name: 'Christmas Forest', file: 'backgrounds/christmas_forest.jpg' },
-    { id: 'boston_commons', name: 'Boston Commons', file: 'backgrounds/boston_commons_christmas_lights.jpg' },
-    { id: 'boston_gazebo', name: 'Boston Gazebo', file: 'backgrounds/boston_charles_river_gazebo_winter.jpg' },
-    { id: 'boston_winter', name: 'Boston Winter', file: 'backgrounds/boston_winter.jpg' },
-    { id: 'boston_state_house_night', name: 'Old State House 2', file: 'backgrounds/boston_old_state_house_2.jpg' },
-    { id: 'boston_state_house', name: 'Old State House', file: 'backgrounds/boston_old_state_house.jpg' },
-    { id: 'groton', name: 'Groton, MA', file: 'backgrounds/groton_massachusetts.jpg' },
-    { id: 'cranes_store', name: 'Crane\'s General Store', file: 'backgrounds/norman_rockwell_cranes_general_store.jpg' },
-    { id: 'hanukkah_menorahs', name: 'Hanukkah Menorahs', file: 'backgrounds/hanukkah_menorahs_eighth_night.jpg' }
+    { id: 'christmas_forest', name: 'Christmas Forest', file: 'backgrounds/christmas_forest.jpg', thumb: 'backgrounds/thumbs/christmas_forest.jpg' },
+    { id: 'boston_commons', name: 'Boston Commons', file: 'backgrounds/boston_commons_christmas_lights.jpg', thumb: 'backgrounds/thumbs/boston_commons_christmas_lights.jpg' },
+    { id: 'boston_gazebo', name: 'Boston Gazebo', file: 'backgrounds/boston_charles_river_gazebo_winter.jpg', thumb: 'backgrounds/thumbs/boston_charles_river_gazebo_winter.jpg' },
+    { id: 'boston_winter', name: 'Boston Winter', file: 'backgrounds/boston_winter.jpg', thumb: 'backgrounds/thumbs/boston_winter.jpg' },
+    { id: 'boston_state_house_night', name: 'Old State House 2', file: 'backgrounds/boston_old_state_house_2.jpg', thumb: 'backgrounds/thumbs/boston_old_state_house_2.jpg' },
+    { id: 'boston_state_house', name: 'Old State House', file: 'backgrounds/boston_old_state_house.jpg', thumb: 'backgrounds/thumbs/boston_old_state_house.jpg' },
+    { id: 'groton', name: 'Groton, MA', file: 'backgrounds/groton_massachusetts.jpg', thumb: 'backgrounds/thumbs/groton_massachusetts.jpg' },
+    { id: 'cranes_store', name: 'Crane\'s General Store', file: 'backgrounds/norman_rockwell_cranes_general_store.jpg', thumb: 'backgrounds/thumbs/norman_rockwell_cranes_general_store.jpg' },
+    { id: 'hanukkah_menorahs', name: 'Hanukkah Menorahs', file: 'backgrounds/hanukkah_menorahs_eighth_night.jpg', thumb: 'backgrounds/thumbs/hanukkah_menorahs_eighth_night.jpg' }
 ];
 
 // Color Palettes (H, S, L objects for dynamic alpha)
@@ -433,23 +434,25 @@ function encodeStateParamSync(state) {
 }
 
 // Copy Deep Link
-if (copyDeepLinkBtn) {
-    copyDeepLinkBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
+function onCopyDeepLinkClick(e) {
+    e.stopPropagation();
 
-        // Build at click time so the link always matches the visible state
-        const linkStr = buildDeepLink();
+    // Build at click time so the link always matches the visible state
+    const linkStr = buildDeepLink();
 
-        // Try async clipboard first, fallback to legacy execCommand
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(linkStr)
-                .then(() => showCopyStatus(true))
-                .catch(() => fallbackCopy(linkStr));
-        } else {
-            fallbackCopy(linkStr);
-        }
-    });
+    // Try async clipboard first, fallback to legacy execCommand
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(linkStr)
+            .then(() => showCopyStatus(true))
+            .catch(() => fallbackCopy(linkStr));
+    } else {
+        fallbackCopy(linkStr);
+    }
 }
+
+[copyDeepLinkBtn, panelCopyLinkBtn].forEach(btn => {
+    if (btn) btn.addEventListener('click', onCopyDeepLinkClick);
+});
 
 function fallbackCopy(text) {
     const ta = document.createElement('textarea');
@@ -469,11 +472,17 @@ function fallbackCopy(text) {
 }
 
 function showCopyStatus(success) {
+    // On failure, put the link in the address bar so it can be copied by hand
+    if (!success) {
+        history.replaceState(null, '', buildDeepLink());
+    }
     if (toastNotification && toastMessage) {
         // Clear first so screen readers re-announce a repeated message
         toastMessage.textContent = '';
         requestAnimationFrame(() => {
-            toastMessage.textContent = success ? 'Link copied to clipboard' : 'Failed to copy link';
+            toastMessage.textContent = success
+                ? 'Link copied to clipboard'
+                : 'Couldn\'t copy. The link is now in the address bar.';
         });
         toastNotification.classList.remove('hidden');
         
@@ -551,13 +560,29 @@ function setPanelOpen(open, { focus = false } = {}) {
 
 settingsBtn.addEventListener('click', (e) => {
     e.stopPropagation(); // Prevent canvas click
-    setPanelOpen(!isPanelOpen(), { focus: true });
+    // e.detail is 0 for keyboard activation; only then move focus into the panel
+    setPanelOpen(!isPanelOpen(), { focus: e.detail === 0 });
 });
 
 closeBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     setPanelOpen(false, { focus: true });
 });
+
+const THEME_NAMES = {
+    warm: 'Warm City Lights',
+    july4: 'Fourth of July',
+    wonderwoman: 'Wonder Woman',
+    fall: 'Fall Harvest',
+    spring: 'Spring Bloom',
+    summer: 'Summer Sky',
+    winter: 'Winter Frost',
+    nordic: 'Norway'
+};
+
+function themeDisplayName(key) {
+    return THEME_NAMES[key] || key.charAt(0).toUpperCase() + key.slice(1);
+}
 
 // Generate Theme List
 function renderThemeCategory(title, keys) {
@@ -566,7 +591,7 @@ function renderThemeCategory(title, keys) {
     const category = document.createElement('div');
     category.className = 'theme-category';
 
-    const heading = document.createElement('div');
+    const heading = document.createElement('h5');
     heading.className = 'theme-category-title';
     heading.textContent = title;
     category.appendChild(heading);
@@ -575,22 +600,27 @@ function renderThemeCategory(title, keys) {
         if (!themes[key]) return;
 
         const btn = document.createElement('button');
+        btn.type = 'button';
         btn.className = 'theme-btn';
         btn.dataset.key = key;
+        btn.setAttribute('aria-pressed', String(key === currentTheme));
         if (key === currentTheme) btn.classList.add('active');
-        
-        // Format name: "warm" -> "Warm", "wonderwoman" -> "Wonderwoman"
-        let displayName = key.charAt(0).toUpperCase() + key.slice(1);
-        if (key === 'warm') displayName = 'Warm City Lights';
-        if (key === 'july4') displayName = 'Fourth of July';
-        if (key === 'wonderwoman') displayName = 'Wonder Woman';
-        if (key === 'fall') displayName = 'Fall Harvest';
-        if (key === 'spring') displayName = 'Spring Bloom';
-        if (key === 'summer') displayName = 'Summer Sky';
-        if (key === 'winter') displayName = 'Winter Frost';
-        if (key === 'nordic') displayName = 'Norway';
-        
-        btn.textContent = displayName;
+
+        const label = document.createElement('span');
+        label.textContent = themeDisplayName(key);
+        btn.appendChild(label);
+
+        // Palette preview: one dot per theme color
+        const swatches = document.createElement('span');
+        swatches.className = 'swatches';
+        swatches.setAttribute('aria-hidden', 'true');
+        themes[key].forEach(c => {
+            const dot = document.createElement('span');
+            dot.className = 'swatch';
+            dot.style.background = `hsl(${c.h}, ${c.s}%, ${c.l}%)`;
+            swatches.appendChild(dot);
+        });
+        btn.appendChild(swatches);
         
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -634,11 +664,23 @@ function setThemeById(themeId) {
 function generateBackgroundList() {
     backgroundImages.forEach(bg => {
         const btn = document.createElement('button');
+        btn.type = 'button';
         btn.className = 'theme-btn'; // Reuse theme button styling
         btn.dataset.id = bg.id;
+        btn.setAttribute('aria-pressed', String(bg.id === currentBackground));
         if (bg.id === currentBackground) btn.classList.add('active');
-        
-        btn.textContent = bg.name;
+
+        const label = document.createElement('span');
+        label.textContent = bg.name;
+        btn.appendChild(label);
+
+        // Small preview; photos use pre-sized thumbnails, not the multi-MB originals
+        const thumb = document.createElement('span');
+        thumb.className = 'bg-thumb';
+        thumb.setAttribute('aria-hidden', 'true');
+        const src = bg.thumb || bg.file;
+        if (src) thumb.style.backgroundImage = `url('${src}')`;
+        btn.appendChild(thumb);
         
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -781,7 +823,6 @@ async function applyDeepLinkFromUrl() {
         setPanelOpen(false);
         setTimeout(() => {
             uiLayer.classList.add('hidden');
-            document.body.style.cursor = 'none';
         }, 2200);
         return true;
     } catch (err) {
@@ -801,17 +842,21 @@ function setBackgroundById(bgId) {
         }
     }
 
-    const allBgBtns = backgroundList.querySelectorAll('.theme-btn');
-    allBgBtns.forEach(b => b.classList.remove('active'));
-    const activeBtn = Array.from(allBgBtns).find(btn => btn.dataset.id === bgId);
-    if (activeBtn) activeBtn.classList.add('active');
+    backgroundList.querySelectorAll('.theme-btn').forEach(b => {
+        const active = b.dataset.id === bgId;
+        b.classList.toggle('active', active);
+        b.setAttribute('aria-pressed', String(active));
+    });
+    if (backgroundCurrent && bg) backgroundCurrent.textContent = bg.name;
 }
 
 function markActiveTheme(themeId) {
-    const allThemeBtns = themeList.querySelectorAll('.theme-btn');
-    allThemeBtns.forEach(b => b.classList.remove('active'));
-    const activeBtn = Array.from(allThemeBtns).find(btn => btn.dataset.key === themeId);
-    if (activeBtn) activeBtn.classList.add('active');
+    themeList.querySelectorAll('.theme-btn').forEach(b => {
+        const active = b.dataset.key === themeId;
+        b.classList.toggle('active', active);
+        b.setAttribute('aria-pressed', String(active));
+    });
+    if (themeCurrent) themeCurrent.textContent = themeDisplayName(themeId);
 }
 
 canvas.addEventListener('click', (e) => {
@@ -827,6 +872,12 @@ window.addEventListener('keydown', (e) => {
     const onControl = e.target instanceof Element && e.target.closest(INTERACTIVE_SELECTOR);
     if ((e.key === 'Enter' || e.key === 'f' || e.key === 'F') && !onControl) {
         toggleFullscreen();
+    }
+    if ((e.key === 'ArrowRight' || e.key === 'ArrowLeft') && !onControl) {
+        const keys = Object.values(themeCategories).flat();
+        const step = e.key === 'ArrowRight' ? 1 : -1;
+        const next = keys[(keys.indexOf(currentTheme) + step + keys.length) % keys.length];
+        setThemeById(next);
     }
     if (e.key === 'Escape' && isPanelOpen()) {
         setPanelOpen(false, { focus: true });
@@ -883,18 +934,28 @@ function setupCollapsibles() {
 
 function setupReducedMotion() {
     const query = window.matchMedia('(prefers-reduced-motion: reduce)');
-    reducedMotion = query.matches;
-    query.addEventListener('change', (e) => {
-        reducedMotion = e.matches;
-    });
+    const apply = (matches) => {
+        reducedMotion = matches;
+        // Drift has no effect under reduced motion, so say so instead of a dead toggle
+        if (driftInput) driftInput.disabled = matches;
+        const note = document.getElementById('drift-note');
+        if (note) note.hidden = !matches;
+    };
+    apply(query.matches);
+    query.addEventListener('change', (e) => apply(e.matches));
 }
 
 async function bootstrap() {
     setupReducedMotion();
     width = canvas.width = window.innerWidth;
     height = canvas.height = window.innerHeight;
+    // The HTML default is the desktop value; match the slider to this device's default
+    particleCountInput.value = particleCount;
+    particleCountVal.textContent = particleCount;
     generateThemeList();
     generateBackgroundList();
+    markActiveTheme(currentTheme);
+    setBackgroundById(currentBackground);
     setupCollapsibles();
     
     if (versionFooter) {
