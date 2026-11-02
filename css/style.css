@@ -184,7 +184,19 @@ body {
     margin-bottom: 25px;
 }
 
+.panel-heading {
+    margin: 0;
+    font: inherit;
+}
+
 .collapsible-header {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 0;
+    font-family: inherit;
+    font-weight: bold;
+    text-align: left;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -272,10 +284,6 @@ input[type=range] {
     -webkit-appearance: none;
 }
 
-input[type=range]:focus {
-    outline: none;
-}
-
 input[type=range]::-webkit-slider-runnable-track {
     width: 100%;
     height: 4px;
@@ -351,12 +359,6 @@ input[type=range]::-moz-range-thumb {
     accent-color: rgba(255, 255, 255, 0.8);
 }
 
-.share-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
 /* Toast Notification */
 .toast {
     position: fixed;
@@ -396,4 +398,16 @@ input[type=range]::-moz-range-thumb {
     color: rgba(255, 255, 255, 0.3);
     font-family: monospace;
     letter-spacing: 0.5px;
+}
+
+/* Visible keyboard focus on the dark glass */
+:is(button, input):focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.9);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        transition-duration: 0.01ms !important;
+    }
 }

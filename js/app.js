@@ -23,7 +23,7 @@ const toastNotification = document.getElementById('toast-notification');
 const toastMessage = document.getElementById('toast-message');
 const versionFooter = document.getElementById('version-footer');
 
-const APP_VERSION = 'v2026.11.02.0611';
+const APP_VERSION = 'v2026.11.02.0614';
 
 const themeCategories = {
     Seasonal: ['fall', 'winter', 'spring', 'summer'],
@@ -39,8 +39,10 @@ let particles = [];
 let inactivityTimer;
 let currentTheme = 'christmas';
 let currentBackground = 'none';
-let cachedDeepLink = '';
-let deepLinkUpdateTimer;
+let reducedMotion = false;
+
+const MAX_STATE_PARAM_LENGTH = 2048;
+const INTERACTIVE_SELECTOR = 'button, input, select, textarea, a[href], [contenteditable]';
 
 // Detect mobile device for performance optimization
 const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 1024;
@@ -284,10 +286,10 @@ class Particle {
 
     update() {
         // No x/y movement. Only update the shimmer phase.
-        this.phase += this.speed;
+        this.phase += this.speed * (reducedMotion ? 0.25 : 1);
 
-        // Gentle drift if enabled
-        if (driftEnabled) {
+        // Gentle drift if enabled (off when the OS asks for reduced motion)
+        if (driftEnabled && !reducedMotion) {
             this.x += this.driftSpeedX;
             this.y += this.driftSpeedY;
 
@@ -339,23 +341,34 @@ class Particle {
     }
 }
 
-async function updateDeepLink() {
+function buildDeepLink() {
     try {
-        const state = buildStatePayload();
-        const encoded = await encodeStateParam(state);
+        const encoded = encodeStateParamSync(buildStatePayload());
         const url = new URL(window.location.href);
         url.searchParams.set('s', encoded);
-        cachedDeepLink = url.toString();
+        return url.toString();
     } catch (err) {
-        console.error('Failed to update deep link', err);
+        console.error('Failed to build deep link', err);
+        return window.location.href;
     }
 }
 
 function resize() {
+    const oldWidth = width;
+    const oldHeight = height;
     width = canvas.width = window.innerWidth;
     height = canvas.height = window.innerHeight;
-    // Re-distribute particles when screen size changes
-    init(); 
+
+    // Regenerate only when there was no previous size or the area grew a lot;
+    // otherwise keep the scene (e.g. mobile address bar showing/hiding)
+    if (!oldWidth || !oldHeight || width * height > oldWidth * oldHeight * 1.25) {
+        init();
+        return;
+    }
+    particles.forEach(p => {
+        if (p.x > width) p.x = Math.random() * width;
+        if (p.y > height) p.y = Math.random() * height;
+    });
 }
 
 function init() {
@@ -363,10 +376,6 @@ function init() {
     for (let i = 0; i < particleCount; i++) {
         particles.push(new Particle());
     }
-    
-    // Debounce deep link update
-    clearTimeout(deepLinkUpdateTimer);
-    deepLinkUpdateTimer = setTimeout(updateDeepLink, 500);
 }
 
 // Particle Count Slider Logic
@@ -427,23 +436,10 @@ function encodeStateParamSync(state) {
 if (copyDeepLinkBtn) {
     copyDeepLinkBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        
-        let linkStr = cachedDeepLink;
-        
-        // If cached link is missing, generate it synchronously (uncompressed)
-        if (!linkStr) {
-            try {
-                const state = buildStatePayload();
-                const encoded = encodeStateParamSync(state);
-                const url = new URL(window.location.href);
-                url.searchParams.set('s', encoded);
-                linkStr = url.toString();
-            } catch (err) {
-                console.error('Failed to generate sync deep link', err);
-                linkStr = window.location.href;
-            }
-        }
-        
+
+        // Build at click time so the link always matches the visible state
+        const linkStr = buildDeepLink();
+
         // Try async clipboard first, fallback to legacy execCommand
         if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(linkStr)
@@ -474,7 +470,11 @@ function fallbackCopy(text) {
 
 function showCopyStatus(success) {
     if (toastNotification && toastMessage) {
-        toastMessage.textContent = success ? 'Link copied to clipboard' : 'Failed to copy link';
+        // Clear first so screen readers re-announce a repeated message
+        toastMessage.textContent = '';
+        requestAnimationFrame(() => {
+            toastMessage.textContent = success ? 'Link copied to clipboard' : 'Failed to copy link';
+        });
         toastNotification.classList.remove('hidden');
         
         // Clear any existing timer to prevent early hiding if clicked rapidly
@@ -536,18 +536,27 @@ function resetSettings() {
 window.addEventListener('resize', resize);
 
 // UI Logic
-function toggleMenu() {
-    themePanel.classList.toggle('panel-hidden');
+function isPanelOpen() {
+    return !themePanel.classList.contains('panel-hidden');
+}
+
+function setPanelOpen(open, { focus = false } = {}) {
+    themePanel.classList.toggle('panel-hidden', !open);
+    themePanel.inert = !open;
+    settingsBtn.setAttribute('aria-expanded', String(open));
+    if (focus) {
+        (open ? closeBtn : settingsBtn).focus();
+    }
 }
 
 settingsBtn.addEventListener('click', (e) => {
     e.stopPropagation(); // Prevent canvas click
-    toggleMenu();
+    setPanelOpen(!isPanelOpen(), { focus: true });
 });
 
 closeBtn.addEventListener('click', (e) => {
     e.stopPropagation();
-    toggleMenu();
+    setPanelOpen(false, { focus: true });
 });
 
 // Generate Theme List
@@ -585,13 +594,7 @@ function renderThemeCategory(title, keys) {
         
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
-            currentTheme = key;
-            init();
-            
-            // Update active state
-            const allThemeBtns = themeList.querySelectorAll('.theme-btn');
-            allThemeBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+            setThemeById(key);
         });
         
         category.appendChild(btn);
@@ -639,22 +642,7 @@ function generateBackgroundList() {
         
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
-            currentBackground = bg.id;
-            
-            // Update Background
-            if (bg.id === 'none') {
-                bgLayer.style.backgroundImage = 'none';
-            } else {
-                bgLayer.style.backgroundImage = `url('${bg.file}')`;
-            }
-            
-            // Update active state
-            // Note: We need to scope this to background buttons only
-            // But since we reused the class, querySelectorAll('.theme-btn') would select all.
-            // We should probably add a specific class or select within container.
-            const allBgBtns = backgroundList.querySelectorAll('.theme-btn');
-            allBgBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+            setBackgroundById(bg.id);
         });
         
         backgroundList.appendChild(btn);
@@ -691,16 +679,6 @@ function fromBase64Url(str) {
     return bytes;
 }
 
-async function compressString(str) {
-    if (typeof CompressionStream === 'undefined') return null;
-    const cs = new CompressionStream('gzip');
-    const writer = cs.writable.getWriter();
-    await writer.write(new TextEncoder().encode(str));
-    await writer.close();
-    const compressed = await new Response(cs.readable).arrayBuffer();
-    return new Uint8Array(compressed);
-}
-
 async function decompressToString(uint8arr) {
     // Check for GZIP magic bytes (0x1F 0x8B)
     if (uint8arr.length > 2 && uint8arr[0] === 0x1f && uint8arr[1] === 0x8b) {
@@ -709,12 +687,9 @@ async function decompressToString(uint8arr) {
             return '{}';
         }
         try {
-            const ds = new DecompressionStream('gzip');
-            const writer = ds.writable.getWriter();
-            await writer.write(uint8arr);
-            await writer.close();
-            const decompressed = await new Response(ds.readable).arrayBuffer();
-            return new TextDecoder().decode(decompressed);
+            // Pipe instead of awaiting writer.write(), which waits on the unread readable side
+            const stream = new Blob([uint8arr]).stream().pipeThrough(new DecompressionStream('gzip'));
+            return await new Response(stream).text();
         } catch (err) {
             console.error('Decompression failed', err);
             return '{}';
@@ -723,13 +698,6 @@ async function decompressToString(uint8arr) {
         // Not gzip, assume plain text
         return new TextDecoder().decode(uint8arr);
     }
-}
-
-async function encodeStateParam(state) {
-    const json = JSON.stringify(state);
-    const compressed = await compressString(json);
-    const data = compressed || new TextEncoder().encode(json);
-    return toBase64Url(data);
 }
 
 async function decodeStateParam(param) {
@@ -750,31 +718,38 @@ function buildStatePayload() {
     };
 }
 
-function applyStatePayload(state) {
-    if (!state || typeof state !== 'object') return;
+// Let the range input clamp to min/max and snap to step; null if not a finite number
+function setRangeFromState(input, value) {
+    if (!input || typeof value !== 'number' || !Number.isFinite(value)) return null;
+    input.value = value;
+    return input.valueAsNumber;
+}
 
-    if (typeof state.particleCount === 'number') {
-        particleCount = state.particleCount;
-        particleCountInput.value = particleCount;
+function applyStatePayload(state) {
+    if (!state || typeof state !== 'object' || Array.isArray(state)) return false;
+
+    const count = setRangeFromState(particleCountInput, state.particleCount);
+    if (count !== null) {
+        particleCount = count;
         particleCountVal.textContent = particleCount;
     }
 
-    if (typeof state.particleSizeScale === 'number') {
-        particleSizeScale = state.particleSizeScale;
-        if (particleSizeInput) particleSizeInput.value = particleSizeScale;
-        if (particleSizeVal) particleSizeVal.textContent = particleSizeScale.toFixed(1);
+    const size = setRangeFromState(particleSizeInput, state.particleSizeScale);
+    if (size !== null) {
+        particleSizeScale = size;
+        particleSizeVal.textContent = particleSizeScale.toFixed(1);
     }
 
-    if (typeof state.animSpeedScale === 'number') {
-        animSpeedScale = state.animSpeedScale;
-        if (animSpeedInput) animSpeedInput.value = animSpeedScale;
-        if (animSpeedVal) animSpeedVal.textContent = animSpeedScale.toFixed(1);
+    const speed = setRangeFromState(animSpeedInput, state.animSpeedScale);
+    if (speed !== null) {
+        animSpeedScale = speed;
+        animSpeedVal.textContent = animSpeedScale.toFixed(1);
     }
 
-    if (typeof state.brightnessPercent === 'number') {
-        brightnessScale = state.brightnessPercent / 100;
-        if (brightnessInput) brightnessInput.value = state.brightnessPercent;
-        if (brightnessVal) brightnessVal.textContent = Math.round(brightnessScale * 100);
+    const brightness = setRangeFromState(brightnessInput, state.brightnessPercent);
+    if (brightness !== null) {
+        brightnessScale = brightness / 100;
+        brightnessVal.textContent = brightness;
     }
 
     if (typeof state.driftEnabled === 'boolean') {
@@ -782,27 +757,28 @@ function applyStatePayload(state) {
         if (driftInput) driftInput.checked = driftEnabled;
     }
 
-    if (state.theme && themes[state.theme]) {
+    if (typeof state.theme === 'string' && Object.hasOwn(themes, state.theme)) {
         currentTheme = state.theme;
         markActiveTheme(currentTheme);
     }
 
-    if (state.background) {
+    if (typeof state.background === 'string' && backgroundImages.some(b => b.id === state.background)) {
         setBackgroundById(state.background);
     }
 
     init();
+    return true;
 }
 
 async function applyDeepLinkFromUrl() {
     const url = new URL(window.location.href);
     const encoded = url.searchParams.get('s');
-    if (!encoded) return false;
+    if (!encoded || encoded.length > MAX_STATE_PARAM_LENGTH) return false;
     try {
         const state = await decodeStateParam(encoded);
-        applyStatePayload(state);
+        if (!applyStatePayload(state)) return false;
         // Hide panel for an immersive start
-        themePanel.classList.add('panel-hidden');
+        setPanelOpen(false);
         setTimeout(() => {
             uiLayer.classList.add('hidden');
             document.body.style.cursor = 'none';
@@ -840,21 +816,20 @@ function markActiveTheme(themeId) {
 
 canvas.addEventListener('click', (e) => {
     // Close menu if open, otherwise toggle fullscreen
-    if (!themePanel.classList.contains('panel-hidden')) {
-        themePanel.classList.add('panel-hidden');
+    if (isPanelOpen()) {
+        setPanelOpen(false);
     } else {
         toggleFullscreen();
     }
 });
 
 window.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
+    const onControl = e.target instanceof Element && e.target.closest(INTERACTIVE_SELECTOR);
+    if ((e.key === 'Enter' || e.key === 'f' || e.key === 'F') && !onControl) {
         toggleFullscreen();
     }
-    if (e.key === 'Escape') {
-        if (!themePanel.classList.contains('panel-hidden')) {
-            themePanel.classList.add('panel-hidden');
-        }
+    if (e.key === 'Escape' && isPanelOpen()) {
+        setPanelOpen(false, { focus: true });
     }
 });
 
@@ -888,6 +863,7 @@ document.addEventListener('fullscreenchange', () => {
 window.addEventListener('mousemove', resetInactivityTimer);
 window.addEventListener('mousedown', resetInactivityTimer);
 window.addEventListener('touchstart', resetInactivityTimer);
+window.addEventListener('keydown', resetInactivityTimer);
 
 // Collapsible Sections
 function setupCollapsibles() {
@@ -895,17 +871,26 @@ function setupCollapsibles() {
     
     headers.forEach(header => {
         header.addEventListener('click', () => {
-            // Toggle the collapsed class on the header (for the icon)
-            header.classList.toggle('collapsed');
-            
-            // Toggle the collapsed class on the content (next sibling)
-            const content = header.nextElementSibling;
-            content.classList.toggle('collapsed');
+            const content = document.getElementById(header.getAttribute('aria-controls'));
+            const collapsed = header.classList.toggle('collapsed');
+            header.setAttribute('aria-expanded', String(!collapsed));
+            content.classList.toggle('collapsed', collapsed);
+            // Keep collapsed controls out of the Tab order
+            content.inert = collapsed;
         });
     });
 }
 
+function setupReducedMotion() {
+    const query = window.matchMedia('(prefers-reduced-motion: reduce)');
+    reducedMotion = query.matches;
+    query.addEventListener('change', (e) => {
+        reducedMotion = e.matches;
+    });
+}
+
 async function bootstrap() {
+    setupReducedMotion();
     width = canvas.width = window.innerWidth;
     height = canvas.height = window.innerHeight;
     generateThemeList();
@@ -920,8 +905,6 @@ async function bootstrap() {
     if (!applied) {
         init();
     }
-    // Force initial deep link generation
-    updateDeepLink();
     animate();
 }
 
