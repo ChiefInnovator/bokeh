@@ -8,7 +8,7 @@
 body {
     background-color: #050505; /* Very dark background for bokeh effect */
     overflow: hidden; /* Prevent scrollbars */
-    font-family: sans-serif;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
 #canvas {
@@ -31,9 +31,9 @@ body {
     background-position: center;
     transition: background-image 0.5s ease-in-out;
     /* Add blur to simulate depth of field */
-    filter: blur(2px); 
+    filter: blur(4px);
     /* slightly scale up to hide blurred edges */
-    transform: scale(1.02); 
+    transform: scale(1.04);
 }
 
 /* Add a vignette overlay */
@@ -153,38 +153,65 @@ body {
     font-size: 1.1rem;
 }
 
-#close-btn {
-    background: none;
-    border: none;
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 2rem;
-    cursor: pointer;
-    line-height: 1;
-    transition: color 0.3s;
+.panel-actions {
+    display: flex;
+    gap: 4px;
 }
 
-#close-btn:hover {
+.panel-icon-btn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    border-radius: 50%;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: color 0.3s, background 0.3s;
+}
+
+.panel-icon-btn:hover {
     color: white;
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .panel-content {
     flex: 1;
     overflow-y: auto;
     padding-right: 5px;
-    scrollbar-width: none;  /* Firefox */
-    -ms-overflow-style: none;  /* IE and Edge */
+    /* Thin, faint scrollbar so the length of the panel stays visible */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
 }
 
-/* Hide scrollbar for Chrome, Safari and Opera */
 .panel-content::-webkit-scrollbar {
-    display: none;
+    width: 4px;
+}
+
+.panel-content::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
 }
 
 .panel-section {
     margin-bottom: 25px;
 }
 
+.panel-heading {
+    margin: 0;
+    font: inherit;
+}
+
 .collapsible-header {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 0;
+    font-family: inherit;
+    font-weight: bold;
+    text-align: left;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -202,7 +229,20 @@ body {
     color: white;
 }
 
+.header-current {
+    margin-left: 6px;
+    color: rgba(255, 255, 255, 0.8);
+    letter-spacing: 0.5px;
+    text-transform: none;
+    font-weight: normal;
+}
+
+.collapsible-header:not(.collapsed) .header-current {
+    display: none;
+}
+
 .chevron {
+    flex-shrink: 0;
     transition: transform 0.3s ease;
 }
 
@@ -236,14 +276,42 @@ body {
     text-align: left;
     cursor: pointer;
     transition: all 0.2s;
+    font-family: inherit;
     font-size: 0.95rem;
-    text-transform: capitalize;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
 }
 
 .theme-btn:hover {
     background: rgba(255, 255, 255, 0.15);
     color: white;
-    transform: translateX(5px);
+}
+
+/* Theme palette and background previews */
+.swatches {
+    display: flex;
+    flex-shrink: 0;
+}
+
+.swatch {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-left: -3px;
+    box-shadow: 0 0 0 1px rgba(20, 20, 20, 0.75);
+}
+
+.bg-thumb {
+    width: 36px;
+    height: 24px;
+    flex-shrink: 0;
+    border-radius: 4px;
+    background-color: #050505;
+    background-size: cover;
+    background-position: center;
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .theme-btn.active {
@@ -270,10 +338,6 @@ input[type=range] {
     width: 100%;
     background: transparent;
     -webkit-appearance: none;
-}
-
-input[type=range]:focus {
-    outline: none;
 }
 
 input[type=range]::-webkit-slider-runnable-track {
@@ -324,7 +388,8 @@ input[type=range]::-moz-range-thumb {
 }
 
 .theme-category-title {
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: normal;
     font-size: 0.85rem;
     letter-spacing: 0.02em;
     text-transform: uppercase;
@@ -344,17 +409,21 @@ input[type=range]::-moz-range-thumb {
     cursor: pointer;
 }
 
+.checkbox-group input[type="checkbox"]:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.control-note {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.8rem;
+}
+
 .checkbox-group input[type="checkbox"] {
     width: 18px;
     height: 18px;
     cursor: pointer;
     accent-color: rgba(255, 255, 255, 0.8);
-}
-
-.share-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
 }
 
 /* Toast Notification */
@@ -393,7 +462,52 @@ input[type=range]::-moz-range-thumb {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     text-align: center;
     font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.3);
-    font-family: monospace;
+    color: rgba(255, 255, 255, 0.5);
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
     letter-spacing: 0.5px;
+}
+
+.panel-hint {
+    margin-top: 20px;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.8rem;
+    line-height: 1.6;
+}
+
+kbd {
+    font-family: inherit;
+    padding: 1px 6px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Phones: bottom sheet so the top of the scene stays visible while adjusting */
+@media (max-width: 480px) {
+    #theme-panel {
+        top: auto;
+        bottom: 0;
+        width: 100%;
+        height: 55vh;
+        border-left: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px 16px 0 0;
+        box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.5);
+    }
+
+    #theme-panel.panel-hidden {
+        transform: translateY(100%);
+    }
+}
+
+/* Visible keyboard focus on the dark glass */
+:is(button, input):focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.9);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        transition-duration: 0.01ms !important;
+    }
 }

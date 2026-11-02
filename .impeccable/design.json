@@ -1,0 +1,220 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-02T12:00:00Z",
+  "title": "Design System: Bokeh Screensaver",
+  "extensions": {
+    "colorMeta": {
+      "void": {
+        "role": "neutral",
+        "displayName": "Void",
+        "canonical": "#050505",
+        "tonalRamp": [
+          "#050505",
+          "#0d0d0d",
+          "#161616",
+          "#222222",
+          "#333333",
+          "#555555",
+          "#888888",
+          "#cccccc"
+        ]
+      },
+      "smoked-glass": {
+        "role": "neutral",
+        "displayName": "Smoked Glass",
+        "canonical": "rgba(20, 20, 20, 0.75)",
+        "tonalRamp": [
+          "rgba(20,20,20,0.95)",
+          "rgba(20,20,20,0.85)",
+          "rgba(20,20,20,0.75)",
+          "rgba(20,20,20,0.6)",
+          "rgba(20,20,20,0.45)",
+          "rgba(20,20,20,0.3)",
+          "rgba(20,20,20,0.15)",
+          "rgba(20,20,20,0.05)"
+        ]
+      },
+      "light-full": {
+        "role": "neutral",
+        "displayName": "Full Light",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "rgba(255,255,255,0.05)",
+          "rgba(255,255,255,0.1)",
+          "rgba(255,255,255,0.15)",
+          "rgba(255,255,255,0.2)",
+          "rgba(255,255,255,0.3)",
+          "rgba(255,255,255,0.5)",
+          "rgba(255,255,255,0.8)",
+          "#ffffff"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "title": {
+        "displayName": "Title",
+        "purpose": "Panel header, uppercase."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Section headers, uppercase tracked."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Theme and background choices, toast."
+      },
+      "control": {
+        "displayName": "Control",
+        "purpose": "Slider and checkbox labels with live values."
+      },
+      "meta": {
+        "displayName": "Meta",
+        "purpose": "Version footer."
+      }
+    },
+    "shadows": [
+      {
+        "name": "panel-cast",
+        "value": "-5px 0 25px rgba(0,0,0,0.5)",
+        "purpose": "Side panel over canvas."
+      },
+      {
+        "name": "toast-lift",
+        "value": "0 5px 15px rgba(0,0,0,0.3)",
+        "purpose": "Toast over bright scenes."
+      },
+      {
+        "name": "selection-glow",
+        "value": "0 0 15px rgba(255,255,255,0.1)",
+        "purpose": "Selected list button."
+      },
+      {
+        "name": "thumb-glow",
+        "value": "0 0 10px rgba(255,255,255,0.5)",
+        "purpose": "Slider thumb."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-spring",
+        "value": "cubic-bezier(0.2, 0.8, 0.2, 1)",
+        "purpose": "Panel slide (0.4s) and toast (0.3s)."
+      },
+      {
+        "name": "fade-ui",
+        "value": "opacity 0.5s ease",
+        "purpose": "Idle fade of the UI layer in fullscreen."
+      },
+      {
+        "name": "hover",
+        "value": "all 0.2s",
+        "purpose": "List-button hover and selection."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "mobile-heuristic",
+        "value": "1024px",
+        "purpose": "Below this width, default particle count drops to 100."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Icon Button",
+      "kind": "button",
+      "refersTo": "icon-button",
+      "description": "Floating circular glass button for link and settings.",
+      "html": "<button class=\"ds-icon-btn\" aria-label=\"Settings\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><circle cx=\"12\" cy=\"12\" r=\"3\"/></svg></button>",
+      "css": ".ds-icon-btn { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 10px; border-radius: 50%; backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.3s, transform 0.3s; } .ds-icon-btn:hover { background: rgba(255,255,255,0.1); transform: scale(1.05); } .ds-icon-btn:focus-visible { outline: 2px solid rgba(255,255,255,0.9); outline-offset: 2px; }"
+    },
+    {
+      "name": "Panel Icon Button",
+      "kind": "button",
+      "refersTo": "panel-icon-button",
+      "description": "Copy link and close actions in the panel header.",
+      "html": "<button class=\"ds-panel-icon\" aria-label=\"Close settings\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"><line x1=\"6\" y1=\"6\" x2=\"18\" y2=\"18\"/><line x1=\"18\" y1=\"6\" x2=\"6\" y2=\"18\"/></svg></button>",
+      "css": ".ds-panel-icon { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: none; border: none; border-radius: 50%; color: rgba(255,255,255,0.5); cursor: pointer; transition: color 0.3s, background 0.3s; } .ds-panel-icon:hover { color: #fff; background: rgba(255,255,255,0.1); } .ds-panel-icon:focus-visible { outline: 2px solid rgba(255,255,255,0.9); outline-offset: 2px; }"
+    },
+    {
+      "name": "List Button",
+      "kind": "button",
+      "refersTo": "list-button",
+      "description": "Theme, background, and reset choices in the panel.",
+      "html": "<button class=\"ds-list-btn\"><span>Winter Frost</span><span class=\"ds-dots\"><i style=\"background:hsl(195,100%,85%)\"></i><i style=\"background:hsl(210,100%,75%)\"></i><i style=\"background:#fff\"></i></span></button><button class=\"ds-list-btn is-active\" aria-pressed=\"true\"><span>Christmas</span><span class=\"ds-dots\"><i style=\"background:hsl(0,100%,50%)\"></i><i style=\"background:hsl(120,100%,40%)\"></i><i style=\"background:hsl(50,100%,50%)\"></i></span></button>",
+      "css": ".ds-list-btn { display: block; width: 100%; padding: 12px 15px; margin-bottom: 8px; background: rgba(255,255,255,0.05); border: 1px solid transparent; border-radius: 8px; color: rgba(255,255,255,0.8); display: flex; justify-content: space-between; align-items: center; font: 0.95rem system-ui, sans-serif; cursor: pointer; transition: all 0.2s; } .ds-list-btn:hover { background: rgba(255,255,255,0.15); color: #fff; } .ds-list-btn.is-active { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.4); color: #fff; font-weight: bold; box-shadow: 0 0 15px rgba(255,255,255,0.1); } .ds-list-btn:focus-visible { outline: 2px solid rgba(255,255,255,0.9); outline-offset: 2px; } .ds-dots { display: flex; } .ds-dots i { width: 12px; height: 12px; border-radius: 50%; margin-left: -3px; box-shadow: 0 0 0 1px rgba(20,20,20,0.75); }"
+    },
+    {
+      "name": "Range Slider",
+      "kind": "input",
+      "refersTo": "range-slider",
+      "description": "Labeled slider with live value.",
+      "html": "<label class=\"ds-label\">Speed: 1.0x</label><input class=\"ds-range\" type=\"range\" min=\"0.1\" max=\"3\" step=\"0.1\" value=\"1\">",
+      "css": ".ds-label { display: block; color: rgba(255,255,255,0.8); margin-bottom: 10px; font: 0.9rem sans-serif; } .ds-range { width: 100%; -webkit-appearance: none; background: transparent; } .ds-range::-webkit-slider-runnable-track { height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; } .ds-range::-webkit-slider-thumb { -webkit-appearance: none; height: 16px; width: 16px; margin-top: -6px; border-radius: 50%; background: #fff; box-shadow: 0 0 10px rgba(255,255,255,0.5); } .ds-range:focus-visible { outline: 2px solid rgba(255,255,255,0.9); outline-offset: 2px; }"
+    },
+    {
+      "name": "Side Panel",
+      "kind": "custom",
+      "refersTo": "side-panel",
+      "description": "Right-edge smoked-glass drawer with collapsible sections.",
+      "html": "<aside class=\"ds-panel\"><h3 class=\"ds-panel-title\">Settings</h3><h4 class=\"ds-section\">Theme</h4></aside>",
+      "css": ".ds-panel { width: 300px; padding: 20px; background: rgba(20,20,20,0.75); backdrop-filter: blur(15px); border-left: 1px solid rgba(255,255,255,0.1); box-shadow: -5px 0 25px rgba(0,0,0,0.5); } .ds-panel-title { color: #fff; font: 300 1.1rem sans-serif; letter-spacing: 1px; text-transform: uppercase; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); } .ds-section { color: rgba(255,255,255,0.5); font: 0.8rem sans-serif; letter-spacing: 1px; text-transform: uppercase; margin: 10px 0; }"
+    },
+    {
+      "name": "Toast",
+      "kind": "custom",
+      "refersTo": "toast",
+      "description": "Transient pill confirmation.",
+      "html": "<div class=\"ds-toast\" role=\"status\">Link copied to clipboard</div>",
+      "css": ".ds-toast { display: inline-flex; padding: 12px 24px; border-radius: 50px; background: rgba(20,20,20,0.85); color: #fff; font: 0.95rem sans-serif; letter-spacing: 0.5px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Open Aperture",
+    "overview": "The screen is a lens wide open on a field of light. The bokeh canvas is the subject and owns every pixel of color; the interface is the lens housing: dark, smoked glass that sits at the edge of the frame and stays out of focus until someone reaches for it. When the panel is open it reads like a camera's settings screen: monochrome, precise, labeled values, no ornament.",
+    "keyCharacteristics": [
+      "Monochrome white-alpha UI over translucent near-black glass.",
+      "Backdrop blur as the depth language (5px buttons, 10px toast, 15px panel).",
+      "Uppercase tracked labels for structure; sentence-case values.",
+      "One right-edge panel (300px), two circular icon buttons top-right, one pill toast bottom-center.",
+      "Motion is slow and soft: 0.2–0.5s eases, one springy curve for panel and toast."
+    ],
+    "rules": [
+      {
+        "name": "The No-Hue Rule",
+        "body": "UI chrome never uses a chromatic color. If a control needs emphasis, raise its white opacity; never tint it.",
+        "section": "colors"
+      },
+      {
+        "name": "The Opacity Ladder Rule",
+        "body": "Text and fills move only along the existing steps (0.05, 0.1, 0.15, 0.2, 0.3, 0.4, 0.5, 0.8, 1.0).",
+        "section": "colors"
+      },
+      {
+        "name": "The Engraving Rule",
+        "body": "Structural text is uppercase and letter-spaced; anything the user reads as a value or choice is not.",
+        "section": "typography"
+      },
+      {
+        "name": "The Blur-Is-Depth Rule",
+        "body": "A new floating surface gets glass (translucent dark fill plus backdrop blur) before it gets a shadow.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do keep every UI surface achromatic (The No-Hue Rule) so all 29 themes read cleanly. Content previews (palette dots, thumbnails) are the one exception.",
+      "Do build new floating surfaces as glass: dark translucent fill plus backdrop blur (The Blur-Is-Depth Rule).",
+      "Do show state with white opacity steps: rest 0.05, hover 0.15, active 0.2 with a 0.4 rim.",
+      "Do keep chrome at the screen edges; the center of the canvas belongs to the light field.",
+      "Do honor reduced motion: transitions near-instant, shimmer slowed, drift off."
+    ],
+    "donts": [
+      "Don't tint controls with theme colors or add brand accent colors.",
+      "Don't place persistent UI over the center of the canvas or add chrome that stays visible in idle fullscreen.",
+      "Don't use hard, opaque panels or heavy drop shadows; they break the out-of-focus optics.",
+      "Don't remove focus outlines without a visible :focus-visible replacement.",
+      "Don't offer light backgrounds (white, pale yellow); additive light disappears into them.",
+      "Don't use text-transform: capitalize on names; write the proper case in data."
+    ]
+  }
+}
